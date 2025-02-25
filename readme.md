@@ -1,1 +1,1 @@
-Az N&R nails a vizsga projektünknek a backend kódja ez. Szia kókányolj nyugodtan.
+Az N&R nails a vizsga projektünknek a backend kódja. Szia kókányolj nyugodtan.
