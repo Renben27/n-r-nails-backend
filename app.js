@@ -19,6 +19,7 @@ app.use(cors({
     credentials: true
 }));
 app.use(cookieParser());
+app.use('/uploads', express.static('uploads'));
 
 dotenv.config();
 const PORT = process.env.PORT;
@@ -81,7 +82,7 @@ function authenticateToken(req, res, next) {
     });
 }
 
-// API végpontok regisztracio KÉSZ de nem működik  már foglalt email rész
+// API végpontok regisztracio KÉSZ
 app.post('/api/register', (req, res) => {
     //console.log(req.body)
     const { email, psw, felhasznev } = req.body;
@@ -186,6 +187,19 @@ app.post('/api/logout', authenticateToken, (req, res) => {
 app.get('/api/logintest', authenticateToken, (req, res) => {
     return res.status(200).json({ message: ' Bent vagy ;)' });
 });
+
+app.get('/api/images', authenticateToken, (req, res) => {
+    sql = 'SELECT kep FROM munkaink'
+    pool.query(sql, (err, result) => {
+        if(err){
+            return res.status(500).json({ error: 'Hiba az SQL-ben' })
+        }
+        if (result.length === 0) {
+            return res.status(404).json({ error: 'Nincs még munkánk' })
+        }
+        return res.status(200).json(result);
+    })
+})
 //az összes meme (ez esetben kártya/lépek) lekérdezése
 app.get('/api/memes', authenticateToken, (req, res) => {
     const sql = 'SELECT uploads.upload_id, uploads.meme, uploads.user_id, users.name, users.profile_pic, COUNT(likes.upload_id) AS "like" FROM uploads JOIN users ON uploads.user_id = users.user_id JOIN likes ON uploads.upload_id = likes.upload_id GROUP BY(upload_id);';
