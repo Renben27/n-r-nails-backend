@@ -226,6 +226,7 @@ app.put('/api/profile', authenticateToken, (req, res) => {
             console.log(err);
             return res.status(500).json({ error: 'Hiba az sql-ben!' });
         }
+        console.log(result);
         return res.status(200).json({ message: 'Profil módosítva!' });
     })
 })
