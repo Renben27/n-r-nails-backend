@@ -214,6 +214,22 @@ app.get('/api/memes', authenticateToken, (req, res) => {
         return res.status(200).json(result);
     });
 });
+// profil szerkesztés
+app.put('/api/profile', authenticateToken, (req, res) => {
+    const felhasznalo_id = req.user.id;
+    const { name, phone, email } =req.body;
+
+    const sql = ' UPDATE felhasznalok SET nev = COALESCE(NULLIF(?, ""),nev), email = COALESCE(NULLIF(?, ""),email), telefon = COALESCE(NULLIF(?, ""),telefon) WHERE felhasznalo_id=?';
+
+    pool.query(sql, [name, email, phone, felhasznalo_id], (err, result) => {
+        if (err) {
+            console.log(err);
+            return res.status(500).json({ error: 'Hiba az sql-ben!' });
+        }
+        return res.status(200).json({ message: 'Profil módosítva!' });
+    })
+})
+/*
 // profilename szerkesztese
 app.put('/api/editProfileName', authenticateToken, (req, res) => {
     const felhasznalo_id = req.user.id;
@@ -228,6 +244,7 @@ app.put('/api/editProfileName', authenticateToken, (req, res) => {
         return res.status(200).json({ message: 'Profil név módosítva!' });
     })
 });
+*/
 //psw mododsítas
 app.put('/api/editProfilePsw', authenticateToken, (req, res) => {
     const felhasznalo_id = req.user.id;
@@ -252,6 +269,7 @@ app.put('/api/editProfilePsw', authenticateToken, (req, res) => {
         });
     });
 });
+
 
 app.get('/api/uploads', authenticateToken, (req, res) => {
     const felhasznalo_id = req.user.id;
