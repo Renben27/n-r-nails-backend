@@ -147,7 +147,7 @@ app.post('/api/register', (req, res) => {
                 return res.status(500).json({ error: 'Hiba a hashelés során' });
             }
     
-            const sql = 'INSERT INTO felhasznalok( email, psw, felhasznev) VALUES( ?, ?, ?)';
+            const sql = 'INSERT INTO felhasznalok (email, psw, felhasznev, szerepkor) VALUES (?, ?, ?, "0")';
     
             pool.query(sql, [email, hash, felhasznev], (err, result) => {
                 if (err) {
