@@ -109,6 +109,8 @@ app.post('/api/register', (req, res) => {
     //console.log(req.body)
     const { email, psw, felhasznev } = req.body;
     const errors = [];
+    console.log(email, psw, felhasznev);
+    
 
     if (!validator.isEmail(email)) {
         errors.push({ error: 'Nem valós email cím!' });
@@ -125,18 +127,23 @@ app.post('/api/register', (req, res) => {
     if (errors.length > 0) {
         return res.status(400).json({ errors });
     }
-    pool.query("SELECT 1 FROM felhasznalok WHERE email = ? OR felhasznev = ?", [email, felhasznev], (err, result) => {
+    pool.query("SELECT * FROM felhasznalok WHERE email = ? OR felhasznev = ?", [email, felhasznev], (err, result) => {
         //console.log(result)
         if (err) {
+            console.log(`felhasználó ellenőrzés: ${err}`);
+            
             return res.status(500).json({error: "Sql hiba"})
         }
 
         if (result.length > 0) {
             return res.status(500).json({error: "Email vagy felhasználónév már használatban"})
         }
-
+        console.log(`felhasználó ellenőrzés eredménye: ${result}`);
+        
         bcrypt.hash(psw, 10, (err, hash) => {
             if (err) {
+                console.log(`bcrypt hiba: ${err}`);
+                
                 return res.status(500).json({ error: 'Hiba a hashelés során' });
             }
     
@@ -144,8 +151,12 @@ app.post('/api/register', (req, res) => {
     
             pool.query(sql, [email, hash, felhasznev], (err, result) => {
                 if (err) {
+                    console.log(`reg hiba sql-ben: ${err}`);
+                    
                     return res.status(500).json({ error: 'Sql Hiba' });
                 }
+                console.log(`sikeres reg: ${result}`);
+                
                 res.status(201).json({ message: 'Sikeres regisztráció!' });
             });
         });
