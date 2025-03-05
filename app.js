@@ -158,7 +158,10 @@ app.post('/api/login', (req, res) => {
         const user = result[0];
         bcrypt.compare(psw, user.psw, (err, isMatch) => {
             if (isMatch) {
-                const token = jwt.sign({ id: user.felhasznalo_id }, JWT_SECRET, { expiresIn: '1y' });
+                const token = jwt.sign({ id: user.user_id, isAdmin: user.admin }, // Admin státusz hozzáadása
+                JWT_SECRET,
+                { expiresIn: '1y' });
+                
                 res.cookie('auth_token', token, {
                     httpOnly: true,
                     secure: true,
