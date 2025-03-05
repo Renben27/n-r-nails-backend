@@ -198,7 +198,7 @@ app.post('/api/login', (req, res) => {
                 res.cookie('auth_token', token, {
                     httpOnly: true,
                     secure: true,
-                    sameSite: 'none',
+                    sameSite: 'lax',
                     maxAge: 1000 * 60 * 60 * 24 * 30 * 12
                 });
 
@@ -218,7 +218,7 @@ app.post('/api/logout', authenticateToken, (req, res) => {
     res.clearCookie('auth_token', {
         httpOnly: true,
         secure: true,
-        sameSite: 'none'
+        sameSite: 'lax'
     });
     return res.status(200).json({ message: 'Sikres kijelentkezés!' });
 });
