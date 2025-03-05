@@ -88,7 +88,7 @@ app.get('/api/getProfile', authenticateToken, (req, res) => {
     const felhasznalo_id = req.user.id;
     const sql = 'SELECT * FROM felhasznalok WHERE felhasznalo_id = ?';
 
-    db.query(sql, [felhasznalo_id], (err, result) => {
+    pool.query(sql, [felhasznalo_id], (err, result) => {
         if (err) {
             return res.status(500).json({ error: 'Hiba az SQL-ben' });
         }
