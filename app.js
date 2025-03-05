@@ -83,6 +83,21 @@ function authenticateToken(req, res, next) {
     });
 }
 
+//adatok betöltése
+app.get('/api/getProfile', authenticateToken, (req, res) => {
+    const felhasznalo_id = req.user.id;
+    const sql = 'SELECT * FROM felhasznalok WHERE felhasznalo_id = ?';
+
+    db.query(sql, [felhasznalo_id], (err, result) => {
+        if (err) {
+            return res.status(500).json({ error: 'Hiba az SQL-ben' });
+        }
+        if (result.length === 0) {
+            return res.status(404).json({ error: 'Felhasználó nem található' });
+        }
+        return res.status(200).json(result[0]); // Küldjük vissza az első elemet
+    });
+});
 // API végpontok regisztracio KÉSZ
 app.post('/api/register', (req, res) => {
     //console.log(req.body)
@@ -132,13 +147,15 @@ app.post('/api/register', (req, res) => {
 });
 //login KÉSZ
 app.post('/api/login', (req, res) => {
+    console.log("Beérkezett kérés:", req.body); // Ellenőrizd a kapott adatokat
+
     const { email, psw } = req.body;
     const errors = [];
 
-    if (!validator.isEmail(email)) {
-        errors.push({ error: 'Add meg az email címet' });
+    if (!email || !validator.isEmail(email)) {
+        errors.push({ error: 'Adj meg egy érvényes email címet' });
     }
-    if (validator.isEmpty(psw)) {
+    if (!psw || validator.isEmpty(psw)) {
         errors.push({ error: 'Add meg a jelszót' });
     }
 
@@ -146,21 +163,31 @@ app.post('/api/login', (req, res) => {
         return res.status(400).json({ errors });
     }
 
-    const sql = 'SELECT * FROM felhasznalok WHERE email LIKE ?'
+    const sql = 'SELECT * FROM felhasznalok WHERE email = ?';
     pool.query(sql, [email], (err, result) => {
         if (err) {
-            return res.status(500).json({ error: 'Hiba az SQL-ben' });
+            console.error("SQL hiba:", err);
+            return res.status(500).json({ error: 'Hiba az adatbázisban' });
         }
 
         if (result.length === 0) {
             return res.status(404).json({ error: 'A felhasználó nem található' });
         }
+
         const user = result[0];
+
         bcrypt.compare(psw, user.psw, (err, isMatch) => {
+            if (err) {
+                console.error("Bcrypt hiba:", err);
+                return res.status(500).json({ error: 'Hiba a jelszó ellenőrzésénél' });
+            }
+
             if (isMatch) {
-                const token = jwt.sign({ id: user.user_id, isAdmin: user.szerepkor }, // Admin státusz hozzáadása
-                JWT_SECRET,
-                { expiresIn: '1y' });
+                const token = jwt.sign(
+                    { id: user.user_id, isAdmin: user.szerepkor === 'admin' }, // isAdmin ellenőrzés
+                    JWT_SECRET,
+                    { expiresIn: '1y' }
+                );
 
                 res.cookie('auth_token', token, {
                     httpOnly: true,
@@ -169,14 +196,17 @@ app.post('/api/login', (req, res) => {
                     maxAge: 1000 * 60 * 60 * 24 * 30 * 12
                 });
 
-                return res.status(200).json({ message: 'Sikeres bejelentkezés!' });
+                return res.status(200).json({ 
+                    message: 'Sikeres bejelentkezés!', 
+                    isAdmin: user.szerepkor === 'admin' 
+                });
             } else {
-                return res.status(401).json({ error: 'Rossz a jelszó' });
+                return res.status(401).json({ error: 'Rossz jelszó' });
             }
         });
     });
-
 });
+
 //logout KÉSZ
 app.post('/api/logout', authenticateToken, (req, res) => {
     res.clearCookie('auth_token', {
