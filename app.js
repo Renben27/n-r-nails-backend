@@ -86,15 +86,21 @@ function authenticateToken(req, res, next) {
 //adatok betöltése
 app.get('/api/getProfile', authenticateToken, (req, res) => {
     const felhasznalo_id = req.user.id;
+    console.log(felhasznalo_id);
+    
     const sql = 'SELECT * FROM felhasznalok WHERE felhasznalo_id = ?';
 
     pool.query(sql, [felhasznalo_id], (err, result) => {
         if (err) {
+            console.log(err);
+            
             return res.status(500).json({ error: 'Hiba az SQL-ben' });
         }
         if (result.length === 0) {
             return res.status(404).json({ error: 'Felhasználó nem található' });
         }
+        console.log(result);
+        
         return res.status(200).json(result); // Küldjük vissza az első elemet
     });
 });
