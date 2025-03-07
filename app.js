@@ -201,7 +201,7 @@ app.post('/api/login', (req, res) => {
 
             if (isMatch) {
                 const token = jwt.sign(
-                    { id: user.user_id, isAdmin: user.szerepkor === 'admin' }, // isAdmin ellenőrzés
+                    { id: user.felhasznalo_id, isAdmin: user.szerepkor === 'admin' }, // isAdmin ellenőrzés
                     JWT_SECRET,
                     { expiresIn: '1y' }
                 );
