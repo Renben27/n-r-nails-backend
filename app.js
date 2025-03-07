@@ -86,7 +86,7 @@ function authenticateToken(req, res, next) {
 //adatok betöltése
 app.get('/api/getProfile', authenticateToken, (req, res) => {
     const felhasznalo_id = req.user.id;
-    console.log(`userid: ${felhasznalo_id}`);
+    //console.log(`userid: ${felhasznalo_id}`);
 
     const sql = 'SELECT * FROM felhasznalok WHERE felhasznalo_id = ?';
 
@@ -99,7 +99,7 @@ app.get('/api/getProfile', authenticateToken, (req, res) => {
             return res.status(404).json({ error: 'Felhasználó nem található' });
         }
 
-        console.log("adatok:", result[0]); // Az első elemet íratjuk ki
+        //console.log("adatok:", result[0]); // Az első elemet íratjuk ki
         return res.status(200).json(result[0]); // Csak az első objektumot küldjük vissza
     });
 });
