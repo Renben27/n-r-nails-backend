@@ -360,6 +360,23 @@ app.post('/api/upload', authenticateToken, upload.single('kep'), (req, res) => {
 
 });
 
+app.post("/api/get-service-id", async (req, res) => {
+    const { service } = req.body; // Pl. "Esztétikai pedikűr"
+    if (!service) {
+        return res.status(400).json({ error: "Nincs kiválasztott szolgáltatás" });
+    }
+
+    const sql = `SELECT szolgaltatas_id FROM szolgaltatasok WHERE nev = ?`;
+
+    db.query(sql, [service], (err, results) => {
+        if (err) return res.status(500).json({ error: "DB hiba" });
+        if (results.length === 0) return res.status(404).json({ error: "Nem található szolgáltatás" });
+        
+        res.json({ service_id: results[0].szolgaltatas_id });
+    });
+});
+
+
 app.listen(PORT, () => {
     console.log(`IP: https://${HOSTNAME}:${PORT}`);
 });
