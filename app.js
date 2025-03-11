@@ -163,7 +163,6 @@ app.post('/api/register', (req, res) => {
 });
 //login KÉSZ
 app.post('/api/login', (req, res) => {
-    console.log("Beérkezett kérés:", req.body); // Ellenőrizd a kapott adatokat
 
     const { email, psw } = req.body;
     const errors = [];
@@ -301,7 +300,7 @@ app.put('/api/editProfileName', authenticateToken, (req, res) => {
 });
 */
 //psw mododsítas
-app.put('/api/editProfilePsw', authenticateToken, (req, res) => {
+/*app.put('/api/editProfilePsw', authenticateToken, (req, res) => {
     const felhasznalo_id = req.user.id;
     const psw = req.body.psw;
     const salt = 10;
@@ -323,8 +322,87 @@ app.put('/api/editProfilePsw', authenticateToken, (req, res) => {
             return res.status(200).json({ message: 'Jelszó módosítva ki leszel jelentkeztetve!' });
         });
     });
-});
+});*/
+app.put('/api/passwordChange', authenticateToken, (req, res)=>{
+    const felhasznalo_id = req.user.id;
+    const { oldPassword, newPassword } = req.body;
 
+    if (!validator.isLength(newPassword, { min: 6 })) {
+        return res.status(400).json({ error: 'A jelszónak legalább 6 hosszúnak kell lennie' });
+    }
+    const sql = 'SELECT psw FROM felhasznalok WHERE felhasznalo_id = ?';
+    pool.query(sql, [felhasznalo_id], (err, result) => {
+        if (err) {
+            return res.status(500).json({ error: 'Hiba az SQL-ben' });
+        }
+
+        if (result.length === 0) {
+            return res.status(404).json({ error: 'Nincs ilyen felhasználó' });
+        }
+
+        const felhasznalo_id = result[0];
+
+        bcrypt.compare(oldPassword, felhasznalo_id.psw, (err, isMatch) => {
+            if (isMatch) {
+                bcrypt.hash(newPassword, 10, (err, hash) => {
+                    if (err) {
+                        return res.status(500).json({ error: 'Hiba a sózáskor!' });
+                    }
+
+                    const sqlUpdate = 'UPDATE felhasznalok SET psw = COALESCE(NULLIF(?, ""), psw) WHERE felhasznalo_id = ?';
+                    pool.query(sqlUpdate, [hash, felhasznalo_id], (err, result) => {
+                        if (err) {
+                            return res.status(500).json({ error: 'Hiba az SQL-ben' });
+                        }
+                        return res.status(200).json({ message: 'Jelszó frissítve' });
+                    });
+                });
+            } else {
+                return res.status(401).json({ error: 'Rossz a jelszó' });
+            }
+        });
+    });
+});
+/*const editPassword = (req, res) => {
+    const { oldPassword, newPassword } = req.body;
+    const user_id = req.user.id;
+
+    if (!validator.isLength(newPassword, { min: 6 })) {
+        return res.status(400).json({ error: 'A jelszónak legalább 6 hosszúnak kell lennie' });
+    }
+    const sql = 'SELECT password FROM users WHERE user_id = ?';
+    db.query(sql, [user_id], (err, result) => {
+        if (err) {
+            return res.status(500).json({ error: 'Hiba az SQL-ben' });
+        }
+
+        if (result.length === 0) {
+            return res.status(404).json({ error: 'Nincs ilyen felhasználó' });
+        }
+
+        const user_id = result[0];
+
+        bcrypt.compare(oldPassword, user_id.password, (err, isMatch) => {
+            if (isMatch) {
+                bcrypt.hash(newPassword, 10, (err, hash) => {
+                    if (err) {
+                        return res.status(500).json({ error: 'Hiba a sózáskor!' });
+                    }
+
+                    const sqlUpdate = 'UPDATE users SET password = COALESCE(NULLIF(?, ""), password) WHERE user_id = ?';
+                    db.query(sqlUpdate, [hash, user_id], (err, result) => {
+                        if (err) {
+                            return res.status(500).json({ error: 'Hiba az SQL-ben' });
+                        }
+                        return res.status(200).json({ message: 'Jelszó frissítve' });
+                    });
+                });
+            } else {
+                return res.status(401).json({ error: 'Rossz a jelszó' });
+            }
+        });
+    });
+};*/
 
 app.get('/api/uploads', authenticateToken, (req, res) => {
     const felhasznalo_id = req.user.id;
@@ -359,6 +437,10 @@ app.post('/api/upload', authenticateToken, upload.single('kep'), (req, res) => {
     });
 
 });
+
+
+
+
 
 app.post("/api/get-service-id", async (req, res) => {
     const { service } = req.body; // Pl. "Esztétikai pedikűr"
