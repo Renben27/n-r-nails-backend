@@ -191,6 +191,7 @@ app.post('/api/login', (req, res) => {
         }
 
         const user = result[0];
+        const isAdmin = user.szerepkor;
 
         bcrypt.compare(psw, user.psw, (err, isMatch) => {
             if (err) {
@@ -216,7 +217,7 @@ app.post('/api/login', (req, res) => {
 
                 return res.status(200).json({ 
                     message: 'Sikeres bejelentkezés!', 
-                    isAdmin: user.szerepkor === 'admin' 
+                    isAdmin
                 });
             } else {
                 return res.status(401).json({ error: 'Rossz jelszó' });
