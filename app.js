@@ -108,7 +108,7 @@ app.post('/api/register', (req, res) => {
     //console.log(req.body)
     const { email, psw, felhasznev } = req.body;
     const errors = [];
-    console.log(email, psw, felhasznev);
+    /*console.log(email, psw, felhasznev);*/
     
 
     if (!validator.isEmail(email)) {
@@ -137,7 +137,7 @@ app.post('/api/register', (req, res) => {
         if (result.length > 0) {
             return res.status(500).json({error: "Email vagy felhasználónév már használatban"})
         }
-        console.log(`felhasználó ellenőrzés eredménye: ${result}`);
+        /*console.log(`felhasználó ellenőrzés eredménye: ${result}`);*/
         
         bcrypt.hash(psw, 10, (err, hash) => {
             if (err) {
@@ -154,7 +154,7 @@ app.post('/api/register', (req, res) => {
                     
                     return res.status(500).json({ error: 'Sql Hiba' });
                 }
-                console.log(`sikeres reg: ${result}`);
+                /*console.log(`sikeres reg: ${result}`);*/
                 
                 res.status(201).json({ message: 'Sikeres regisztráció!' });
             });
