@@ -340,9 +340,9 @@ app.put('/api/passwordChange', authenticateToken, (req, res)=>{
             return res.status(404).json({ error: 'Nincs ilyen felhasználó' });
         }
 
-        const felhasznalo_id = result[0];
+        const felhasznalo = result[0];
 
-        bcrypt.compare(oldPassword, felhasznalo_id.psw, (err, isMatch) => {
+        bcrypt.compare(oldPassword, felhasznalo.psw, (err, isMatch) => {
             if (isMatch) {
                 bcrypt.hash(newPassword, 10, (err, hash) => {
                     if (err) {
