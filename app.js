@@ -450,7 +450,7 @@ app.post("/api/get-service-id", async (req, res) => {
 
     const sql = `SELECT szolgaltatas_id FROM szolgaltatasok WHERE nev = ?`;
 
-    db.query(sql, [service], (err, results) => {
+    pool.query(sql, [service], (err, results) => {
         if (err) return res.status(500).json({ error: "DB hiba" });
         if (results.length === 0) return res.status(404).json({ error: "Nem található szolgáltatás" });
         
@@ -458,6 +458,23 @@ app.post("/api/get-service-id", async (req, res) => {
     });
 });
 
+
+
+app.post('/api/contact', (req, res) => {
+
+    const { nev, email, telefon, uzenet } = req.body;
+    console.log(nev, email, telefon, uzenet);
+    
+    const sql = 'INSERT INTO `kapcsolat` (`felhasznalo_id`, `nev`, `telefon`, `email`, `uzenet`) VALUES (NULL, ?, ?, ?, ?);';
+    
+    pool.query(sql, [nev, email, telefon, uzenet], (err, result) => {
+      if (err) {
+        console.log(err);
+        return res.status(500).json({ error: 'Hiba' });
+      }
+      return res.status(201).json({ message: 'Sikeres felvitel' });
+    })
+});
 
 app.listen(PORT, () => {
     console.log(`IP: https://${HOSTNAME}:${PORT}`);
