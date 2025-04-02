@@ -442,7 +442,7 @@ app.post('/api/upload', authenticateToken, upload.single('kep'), (req, res) => {
 
 
 
-app.post("/api/get-service-id", async (req, res) => {
+/*app.post("/api/get-service-id", async (req, res) => {
     const { service } = req.body; // Pl. "Esztétikai pedikűr"
     if (!service) {
         return res.status(400).json({ error: "Nincs kiválasztott szolgáltatás" });
@@ -457,15 +457,14 @@ app.post("/api/get-service-id", async (req, res) => {
         res.json({ service_id: results[0].szolgaltatas_id });
     });
 });
+*/
 
 
-
-app.post('/api/contact', (req, res) => {
-
+app.post('/api/contact',authenticateToken, (req, res) => {
     const { nev, email, telefon, uzenet } = req.body;
     console.log(nev, email, telefon, uzenet);
     
-    const sql = 'INSERT INTO `kapcsolat` (`felhasznalo_id`, `nev`, `telefon`, `email`, `uzenet`) VALUES (NULL, ?, ?, ?, ?);';
+    const sql = 'INSERT INTO `kapcsolat` ( `nev`, `telefon`, `email`, `uzenet`)  VALUES (NULL, ?, ?, ?, ?)';
     
     pool.query(sql, [nev, email, telefon, uzenet], (err, result) => {
       if (err) {
