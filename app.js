@@ -464,7 +464,7 @@ app.post('/api/contact',authenticateToken, (req, res) => {
     const { nev, email, telefon, uzenet } = req.body;
     console.log(nev, email, telefon, uzenet);
     
-    const sql = 'INSERT INTO `kapcsolat` ( `nev`, `telefon`, `email`, `uzenet`)  VALUES (NULL, ?, ?, ?, ?)';
+    const sql = 'INSERT INTO `kapcsolat` (kapcsolat_id, `nev`, `telefon`, `email`, `uzenet`)  VALUES (NULL, ?, ?, ?, ?)';
     
     pool.query(sql, [nev, email, telefon, uzenet], (err, result) => {
       if (err) {
