@@ -461,16 +461,17 @@ app.post('/api/upload', authenticateToken, upload.single('kep'), (req, res) => {
 
 
 app.post('/api/contact',authenticateToken, (req, res) => {
-    const { nev, email, telefon, uzenet } = req.body;
+    const { nev,telefon, email,  uzenet } = req.body;
     console.log(nev, email, telefon, uzenet);
     
     const sql = 'INSERT INTO `kapcsolat` (kapcsolat_id, `nev`, `telefon`, `email`, `uzenet`)  VALUES (NULL, ?, ?, ?, ?)';
     
-    pool.query(sql, [nev, email, telefon, uzenet], (err, result) => {
+    pool.query(sql, [nev,telefon, email,  uzenet], (err, result) => {
       if (err) {
         console.log(err);
         return res.status(500).json({ error: 'Hiba' });
       }
+      console.log(result);
       return res.status(201).json({ message: 'Sikeres felvitel' });
     })
 });
