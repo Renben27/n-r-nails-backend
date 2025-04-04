@@ -459,7 +459,7 @@ app.post('/api/upload', authenticateToken, upload.single('kep'), (req, res) => {
 });
 */
 
-
+//kapcsolat feltöltés
 app.post('/api/contact',authenticateToken, (req, res) => {
     const { nev,telefon, email,  uzenet } = req.body;
     console.log(nev, email, telefon, uzenet);
@@ -476,6 +476,40 @@ app.post('/api/contact',authenticateToken, (req, res) => {
     })
 });
 
+/*vélemények írása
+app.post('/api/opinion',authenticateToken, (req, res) => {
+    const {velemeny} = req.body;
+    console.log(velemeny);
+    
+    const sql = 'INSERT INTO `velemenyek` (`velemeny_id`, `felhasznalo_id`, `velemeny`, `datum`) VALUES (NULL, ?, current_timestamp());';
+    
+    pool.query(sql, [velemeny], (err, result) => {
+      if (err) {
+        console.log(err);
+        return res.status(500).json({ error: 'Hiba' });
+      }
+      console.log(result);
+      return res.status(201).json({ message: 'Sikeres felvitel' });
+    })
+});
+*/
+app.post('/api/velemeny', authenticateToken, (req, res) => {
+    const felhasznalo_id = req.user.id; // A bejelentkezett felhasználó ID-ja
+    const { velemeny } = req.body;
+
+    if (!velemeny || velemeny.length < 5) {
+        return res.status(400).json({ error: "A vélemény túl rövid!" });
+    }
+
+    const sql = "INSERT INTO velemenyek (felhasznalo_id, velemeny, datum) VALUES (?, ?, current_timestamp())";
+    pool.query(sql, [felhasznalo_id, velemeny], (err, result) => {
+        if (err) {
+            console.error("Hiba a vélemény mentésekor:", err);
+            return res.status(500).json({ error: "Adatbázis hiba" });
+        }
+        res.status(201).json({ message: "Vélemény sikeresen mentve!" });
+    });
+});
 app.listen(PORT, () => {
     console.log(`IP: https://${HOSTNAME}:${PORT}`);
 });
