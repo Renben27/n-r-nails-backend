@@ -461,12 +461,12 @@ app.post('/api/upload', authenticateToken, upload.single('kep'), (req, res) => {
 
 //kapcsolat feltöltés
 app.post('/api/contact',authenticateToken, (req, res) => {
-    const { nev,telefon, email,  uzenet } = req.body;
+    const { nev, telefon, email,  uzenet } = req.body;
     console.log(nev, email, telefon, uzenet);
     
     const sql = 'INSERT INTO `kapcsolat` (kapcsolat_id, `nev`, `telefon`, `email`, `uzenet`)  VALUES (NULL, ?, ?, ?, ?)';
     
-    pool.query(sql, [nev,telefon, email,  uzenet], (err, result) => {
+    pool.query(sql, [nev, telefon, email, uzenet], (err, result) => {
       if (err) {
         console.log(err);
         return res.status(500).json({ error: 'Hiba' });
@@ -501,7 +501,7 @@ app.post('/api/velemeny', authenticateToken, (req, res) => {
         return res.status(400).json({ error: "A vélemény túl rövid!" });
     }
 
-    const sql = "INSERT INTO velemenyek (felhasznalo_id, velemeny, datum) VALUES (?, ?, current_timestamp())";
+    const sql = "INSERT INTO velemenyek (felhasznalo_id, velemeny) VALUES (?, ?)";/*-datum meg currenttime */
     pool.query(sql, [felhasznalo_id, velemeny], (err, result) => {
         if (err) {
             console.error("Hiba a vélemény mentésekor:", err);
