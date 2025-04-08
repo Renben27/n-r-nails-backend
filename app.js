@@ -109,7 +109,7 @@ app.post('/api/register', (req, res) => {
     const { email, psw, felhasznev } = req.body;
     const errors = [];
     /*console.log(email, psw, felhasznev);*/
-    
+
 
     if (!validator.isEmail(email)) {
         errors.push({ error: 'Nem valós email cím!' });
@@ -130,32 +130,32 @@ app.post('/api/register', (req, res) => {
         //console.log(result)
         if (err) {
             console.log(`felhasználó ellenőrzés: ${err}`);
-            
-            return res.status(500).json({error: "Sql hiba"})
+
+            return res.status(500).json({ error: "Sql hiba" })
         }
 
         if (result.length > 0) {
-            return res.status(500).json({error: "Email vagy felhasználónév már használatban"})
+            return res.status(500).json({ error: "Email vagy felhasználónév már használatban" })
         }
         /*console.log(`felhasználó ellenőrzés eredménye: ${result}`);*/
-        
+
         bcrypt.hash(psw, 10, (err, hash) => {
             if (err) {
                 console.log(`bcrypt hiba: ${err}`);
-                
+
                 return res.status(500).json({ error: 'Hiba a hashelés során' });
             }
-    
+
             const sql = 'INSERT INTO felhasznalok (email, psw, felhasznev, szerepkor) VALUES (?, ?, ?, "0")';
-    
+
             pool.query(sql, [email, hash, felhasznev], (err, result) => {
                 if (err) {
                     console.log(`reg hiba sql-ben: ${err}`);
-                    
+
                     return res.status(500).json({ error: 'Sql Hiba' });
                 }
                 /*console.log(`sikeres reg: ${result}`);*/
-                
+
                 res.status(201).json({ message: 'Sikeres regisztráció!' });
             });
         });
@@ -214,8 +214,8 @@ app.post('/api/login', (req, res) => {
                     maxAge: 1000 * 60 * 60 * 24 * 30 * 12
                 });
 
-                return res.status(200).json({ 
-                    message: 'Sikeres bejelentkezés!', 
+                return res.status(200).json({
+                    message: 'Sikeres bejelentkezés!',
                     isAdmin
                 });
             } else {
@@ -245,7 +245,7 @@ app.get('/api/logintest', authenticateToken, (req, res) => {
 app.get('/api/images', authenticateToken, (req, res) => {
     sql = 'SELECT kep FROM munkaink'
     pool.query(sql, (err, result) => {
-        if(err){
+        if (err) {
             return res.status(500).json({ error: 'Hiba az SQL-ben' })
         }
         if (result.length === 0) {
@@ -270,7 +270,7 @@ app.get('/api/memes', authenticateToken, (req, res) => {
 // profil szerkesztés
 app.put('/api/profile', authenticateToken, (req, res) => {
     const felhasznalo_id = req.user.id;
-    const { name, phone, email } =req.body;
+    const { name, phone, email } = req.body;
 
     const sql = ' UPDATE felhasznalok SET nev = COALESCE(NULLIF(?, ""),nev), email = COALESCE(NULLIF(?, ""),email), telefon = COALESCE(NULLIF(?, ""),telefon) WHERE felhasznalo_id=?';
 
@@ -323,7 +323,7 @@ app.put('/api/editProfileName', authenticateToken, (req, res) => {
         });
     });
 });*/
-app.put('/api/passwordChange', authenticateToken, (req, res)=>{
+app.put('/api/passwordChange', authenticateToken, (req, res) => {
     const felhasznalo_id = req.user.id;
     const { oldPassword, newPassword } = req.body;
 
@@ -460,19 +460,19 @@ app.post('/api/upload', authenticateToken, upload.single('kep'), (req, res) => {
 */
 
 //kapcsolat feltöltés
-app.post('/api/contact',authenticateToken, (req, res) => {
-    const { nev, telefon, email,  uzenet } = req.body;
+app.post('/api/contact', authenticateToken, (req, res) => {
+    const { nev, telefon, email, uzenet } = req.body;
     console.log(nev, email, telefon, uzenet);
-    
+
     const sql = 'INSERT INTO `kapcsolat` (kapcsolat_id, `nev`, `telefon`, `email`, `uzenet`)  VALUES (NULL, ?, ?, ?, ?)';
-    
+
     pool.query(sql, [nev, telefon, email, uzenet], (err, result) => {
-      if (err) {
-        console.log(err);
-        return res.status(500).json({ error: 'Hiba' });
-      }
-      console.log(result);
-      return res.status(201).json({ message: 'Sikeres felvitel' });
+        if (err) {
+            console.log(err);
+            return res.status(500).json({ error: 'Hiba' });
+        }
+        console.log(result);
+        return res.status(201).json({ message: 'Sikeres felvitel' });
     })
 });
 
@@ -500,11 +500,11 @@ app.post('/api/velemeny', authenticateToken, (req, res) => {
     if (!velemeny || velemeny.length < 5) {
         return res.status(400).json({ error: "A vélemény túl rövid!" });
     }
-
+    console.log(velemeny);
     const sql = "INSERT INTO velemenyek (felhasznalo_id, velemeny) VALUES (?, ?)";/*-datum meg currenttime */
     pool.query(sql, [felhasznalo_id, velemeny], (err, result) => {
         if (err) {
-            console.error("Hiba a vélemény mentésekor:", err);
+            console.log("Hiba a vélemény mentésekor:", err);
             return res.status(500).json({ error: "Adatbázis hiba" });
         }
         res.status(201).json({ message: "Vélemény sikeresen mentve!" });
