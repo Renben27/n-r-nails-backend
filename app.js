@@ -500,11 +500,11 @@ app.post('/api/velemeny', authenticateToken, (req, res) => {
     if (!velemeny || velemeny.length < 5) {
         return res.status(400).json({ error: "A vélemény túl rövid!" });
     }
-    console.log(velemeny);
+    
     const sql = "INSERT INTO velemenyek (felhasznalo_id, velemeny) VALUES (?, ?)";/*-datum meg currenttime */
     pool.query(sql, [felhasznalo_id, velemeny], (err, result) => {
         if (err) {
-            console.log("Hiba a vélemény mentésekor:", err);
+            console.log(err);
             return res.status(500).json({ error: "Adatbázis hiba" });
         }
         res.status(201).json({ message: "Vélemény sikeresen mentve!" });
