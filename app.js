@@ -484,7 +484,7 @@ app.delete('/api/delservices/szolgaltatas_id', authenticateToken, (req, res) => 
     pool.query(sql, [szolgaltatas_id], (err, result) => {
         if (err) {
             console.log(err);
-            return res.status(500).json({ error: 'Hiba', err});
+            return res.status(500).json({ error: 'Hiba'}, err);
         }
         return res.status(201).json({ message: 'Sikeres törlés' });
     })
