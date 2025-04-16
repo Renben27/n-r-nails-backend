@@ -490,7 +490,7 @@ app.delete('/api/delservices/:szolgaltatas_id', authenticateToken, (req, res) =>
     })
 });
 //szolg mosoditas
-app.put('api/changeservices/:szolgaltatas_id', (req, res)=>{
+app.put('/api/changeservices/:szolgaltatas_id', (req, res)=>{
     const { szolgaltatas_id } = req.params;
     const { kategoria_id, nev, ar } = req.body;
     console.log(szolgaltatas_id, kategoria_id, nev, ar);
