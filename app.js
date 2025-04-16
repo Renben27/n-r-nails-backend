@@ -452,7 +452,7 @@ app.post('/api/addcategory', authenticateToken, upload.single('kep'), (req, res)
 });
 //kategoria törlés
 app.delete('/api/delcategory/kategoria_id', authenticateToken, (req, res) => {
-    const kategoria_id = req.params.kategoria_id;
+    const {kategoria_id} = req.params;
     const sql = ('DELETE FROM kategoriak WHERE `kategoriak`.`kategoria_id` = ?');
     pool.query(sql, [kategoria_id], (err, result) => {
         if (err) {
@@ -461,7 +461,6 @@ app.delete('/api/delcategory/kategoria_id', authenticateToken, (req, res) => {
         }
         return res.status(201).json({ message: 'Sikeres törlés' });
     })
-
 });
 
 //szolgaltatas feltooltés
