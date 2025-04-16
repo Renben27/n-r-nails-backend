@@ -451,7 +451,7 @@ app.post('/api/addcategory', authenticateToken, upload.single('kep'), (req, res)
     });
 });
 //kategoria törlés
-app.delete('/api/delcategory/kategoria_id', authenticateToken, (req, res) => {
+app.delete('/api/delcategory/:kategoria_id', authenticateToken, (req, res) => {
     const {kategoria_id} = req.params;
     const sql = ('DELETE FROM kategoriak WHERE `kategoriak`.`kategoria_id` = ?');
     pool.query(sql, [kategoria_id], (err, result) => {
@@ -477,7 +477,7 @@ app.post('/api/addservices', authenticateToken, (req, res) => {
     })
 });
 //szolgalt törlés
-app.delete('/api/delservices/szolgaltatas_id', authenticateToken, (req, res) => {
+app.delete('/api/delservices/:szolgaltatas_id', authenticateToken, (req, res) => {
     const szolgaltatas_id = req.params.szolgaltatas_id;
     console.log(szolgaltatas_id);
     const sql = ('DELETE FROM szolgaltatasok WHERE szolgaltatasok.szolgaltatas_id = ?');
@@ -489,6 +489,20 @@ app.delete('/api/delservices/szolgaltatas_id', authenticateToken, (req, res) => 
         return res.status(201).json({ message: 'Sikeres törlés' });
     })
 });
+//szolg mosoditas
+app.put('/changeservices/:szolgaltatas_id', (req, res)=>{
+    const { szolgaltatas_id } = req.params;
+    const { kategoria_id, nev, ar } = req.body;
+    console.log(szolgaltatas_id, kategoria_id, nev, ar);
+    const sql= 'UPDATE `szolgaltatasok` SET `nev` = ?, `ar` = ? WHERE `szolgaltatasok`.`szolgaltatas_id` = ?;';
+    pool.query(sql, [kategoria_id, nev, ar, szolgaltatas_id], function (err, result) {
+      if (err) {
+        console.log(err);
+        return res.status(500).json({ error: 'Hiba' });
+      }
+      return res.status(201).json({ message: 'Sikeres módosítás' });
+    })
+  });
 /*app.post("/api/get-service-id", async (req, res) => {
     const { service } = req.body; // Pl. "Esztétikai pedikűr"
     if (!service) {
