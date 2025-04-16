@@ -434,7 +434,7 @@ app.post('/api/booking', authenticateToken, (req, res) => {
 });
 //kategoria felvitel
 app.post('/api/addcategory', authenticateToken, upload.single('kep'), (req, res) => {
-    const { nev} = req.body;
+    const { nev } = req.body;
     const kep = req.file ? req.file.filename : null;
     if (kep === null) {
         return res.status(400).json({ error: 'Válassz ki egy képet' });
@@ -452,7 +452,7 @@ app.post('/api/addcategory', authenticateToken, upload.single('kep'), (req, res)
 });
 //kategoria törlés
 app.delete('/api/delcategory/:kategoria_id', authenticateToken, (req, res) => {
-    const {kategoria_id} = req.params;
+    const { kategoria_id } = req.params;
     const sql = ('DELETE FROM kategoriak WHERE `kategoriak`.`kategoria_id` = ?');
     pool.query(sql, [kategoria_id], (err, result) => {
         if (err) {
@@ -484,25 +484,25 @@ app.delete('/api/delservices/:szolgaltatas_id', authenticateToken, (req, res) =>
     pool.query(sql, [szolgaltatas_id], (err, result) => {
         if (err) {
             console.log(err);
-            return res.status(500).json({ error: 'Hiba'}, err);
+            return res.status(500).json({ error: 'Hiba' }, err);
         }
         return res.status(201).json({ message: 'Sikeres törlés' });
     })
 });
 //szolg mosoditas
-app.put('/api/changeservices/:szolgaltatas_id', (req, res)=>{
+app.put('/api/changeservices/:szolgaltatas_id', (req, res) => {
     const { szolgaltatas_id } = req.params;
     const { kategoria_id, nev, ar } = req.body;
     console.log(szolgaltatas_id, kategoria_id, nev, ar);
-    const sql= 'UPDATE `szolgaltatasok` SET `nev` = ?, `ar` = ? WHERE `szolgaltatasok`.`szolgaltatas_id` = ?;';
+    const sql = 'UPDATE `szolgaltatasok` SET `nev` = ?, `ar` = ? WHERE `szolgaltatasok`.`szolgaltatas_id` = ?;';
     pool.query(sql, [kategoria_id, nev, ar, szolgaltatas_id], function (err, result) {
-      if (err) {
-        console.log(err);
-        return res.status(500).json({ error: 'Hiba' });
-      }
-      return res.status(201).json({ message: 'Sikeres módosítás' });
+        if (err) {
+            console.log(err);
+            return res.status(500).json({ error: 'Hiba' }, err);
+        }
+        return res.status(201).json({ message: 'Sikeres módosítás' });
     })
-  });
+});
 /*app.post("/api/get-service-id", async (req, res) => {
     const { service } = req.body; // Pl. "Esztétikai pedikűr"
     if (!service) {
