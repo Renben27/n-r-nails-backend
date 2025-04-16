@@ -404,22 +404,6 @@ app.put('/api/passwordChange', authenticateToken, (req, res) => {
     });
 };*/
 
-app.get('/api/uploads', authenticateToken, (req, res) => {
-    const felhasznalo_id = req.user.id;
-    const sql = 'SELECT uploads.upload_id, uploads.meme, uploads.user_id, users.name, users.profile_pic, COUNT(likes.upload_id) AS`like`, CASE WHEN EXISTS(SELECT 1 FROM likes WHERE likes.upload_id = uploads.upload_id AND likes.user_id = ?) THEN 1 ELSE 0 END AS alreadyLiked FROM uploads JOIN users ON uploads.user_id = users.user_id LEFT JOIN likes ON uploads.upload_id = likes.upload_id GROUP BY uploads.upload_id';
-    /*az sql parancs lekezeli az 1 es 0 ertekeket is*/
-
-    pool.query(sql, [felhasznalo_id], (err, result) => {
-        if (err) {
-            return res.status(500).json({ error: 'Hiba az SQL-ben' })
-        }
-        if (result.length === 0) {
-            return res.status(404).json({ error: 'Nincs még meme' })
-        }
-        return res.status(200).json(result);
-    });
-});
-
 //új képek uploads feltöltése
 app.post('/api/upload', authenticateToken, upload.single('kep'), (req, res) => {
     const felhasznalo_id = req.user.id;
@@ -439,9 +423,67 @@ app.post('/api/upload', authenticateToken, upload.single('kep'), (req, res) => {
 });
 
 
+//idopontfoglalas
+app.post('/api/booking', authenticateToken, (req, res) => {
+    const { felhasznalo_id, datum, szolgaltatas_id } = req.body;
+    const sql = ('INSERT INTO `foglalasok` (`foglalas_id`, `felhasznalo_id`, `datum`, `szolgaltatas_id`) VALUES (NULL, ?, current_timestamp(), ?)');
+    if (datum === null) {
+        return res.status(400).json({ error: 'Nincs kiválasztott időpont!' });
+    }
 
+});
+//kategoria felvitel
+app.post('/api/addcategory', authenticateToken, (req, res) => {
+    const { nev, kep } = req.body;
+    const sql = (' INSERT INTO `kategoriak` (`kategoria_id`, `nev`, `kep`) VALUES (NULL, ?, ?);');
+    pool.query(sql, [nev, kep], (err, result) => {
+        if (err) {
+            console.log(err);
+            return res.status(500).json({ error: 'Hiba' });
+        }
+        console.log(result);
+        return res.status(201).json({ message: 'Sikeres felvitel' });
+    });
+});
+//kategoria törlés
+app.delete('/api/delcategory/kategoria_id', authenticateToken, (req, res) => {
+    const kategoria_id = req.params.kategoria_id;
+    const sql = ('DELETE FROM kategoriak WHERE `kategoriak`.`kategoria_id` = ?');
+    pool.query(sql, [kategoria_id], (err, result) => {
+        if (err) {
+            console.log(err);
+            return res.status(500).json({ error: 'Hiba' });
+        }
+        return res.status(201).json({ message: 'Sikeres törlés' });
+    })
 
+});
 
+//szolgaltatas feltooltés
+app.post('/api/addservices', authenticateToken, (req, res) => {
+    const { kategoria_id, nev, ar } = req.body;
+    const sql = (' INSERT INTO `szolgaltatasok` (`szolgaltatas_id`, `kategoria_id`, `nev`, `ar`) VALUES (NULL, ?, ?, ?)');
+    pool.query(sql, [kategoria_id, nev, ar], (err, result) => {
+        if (err) {
+            console.log(err);
+            return res.status(500).json({ error: 'Hiba' });
+        }
+        console.log(result);
+        return res.status(201).json({ message: 'Sikeres felvitel' });
+    })
+});
+//szolgalt törlés
+app.delete('/api/delservices/szolgaltatas_id', authenticateToken, (req, res) => {
+    const szolgaltatas_id = req.params.szolgaltatas_id;
+    const sql = ('DELETE FROM szolgaltatasok WHERE `szolgaltatasok`.`szolgaltatas_id` = ?');
+    pool.query(sql, [szolgaltatas_id], (err, result) => {
+        if (err) {
+            console.log(err);
+            return res.status(500).json({ error: 'Hiba' });
+        }
+        return res.status(201).json({ message: 'Sikeres törlés' });
+    })
+});
 /*app.post("/api/get-service-id", async (req, res) => {
     const { service } = req.body; // Pl. "Esztétikai pedikűr"
     if (!service) {
@@ -476,23 +518,8 @@ app.post('/api/contact', authenticateToken, (req, res) => {
     })
 });
 
-/*vélemények írása
-app.post('/api/opinion',authenticateToken, (req, res) => {
-    const {velemeny} = req.body;
-    console.log(velemeny);
-    
-    const sql = 'INSERT INTO `velemenyek` (`velemeny_id`, `felhasznalo_id`, `velemeny`, `datum`) VALUES (NULL, ?, current_timestamp());';
-    
-    pool.query(sql, [velemeny], (err, result) => {
-      if (err) {
-        console.log(err);
-        return res.status(500).json({ error: 'Hiba' });
-      }
-      console.log(result);
-      return res.status(201).json({ message: 'Sikeres felvitel' });
-    })
-});
-*/
+/*vélemények írása*/
+
 app.post('/api/velemeny', authenticateToken, (req, res) => {
     const felhasznalo_id = req.user.id; // A bejelentkezett felhasználó ID-ja
     const { velemeny } = req.body;
@@ -500,7 +527,7 @@ app.post('/api/velemeny', authenticateToken, (req, res) => {
     if (!velemeny || velemeny.length < 5) {
         return res.status(400).json({ error: "A vélemény túl rövid!" });
     }
-    
+
     const sql = "INSERT INTO velemenyek (felhasznalo_id, velemeny) VALUES (?, ?)";/*-datum meg currenttime */
     pool.query(sql, [felhasznalo_id, velemeny], (err, result) => {
         if (err) {
@@ -510,6 +537,7 @@ app.post('/api/velemeny', authenticateToken, (req, res) => {
         res.status(201).json({ message: "Vélemény sikeresen mentve!" });
     });
 });
+
 app.listen(PORT, () => {
     console.log(`IP: https://${HOSTNAME}:${PORT}`);
 });
