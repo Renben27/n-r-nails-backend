@@ -479,11 +479,12 @@ app.post('/api/addservices', authenticateToken, (req, res) => {
 //szolgalt törlés
 app.delete('/api/delservices/szolgaltatas_id', authenticateToken, (req, res) => {
     const szolgaltatas_id = req.params.szolgaltatas_id;
+    console.log(szolgaltatas_id);
     const sql = ('DELETE FROM szolgaltatasok WHERE `szolgaltatasok`.`szolgaltatas_id` = ?');
     pool.query(sql, [szolgaltatas_id], (err, result) => {
         if (err) {
             console.log(err);
-            return res.status(500).json({ error: 'Hiba' });
+            return res.status(500).json({ error: 'Hiba', err});
         }
         return res.status(201).json({ message: 'Sikeres törlés' });
     })
