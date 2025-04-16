@@ -480,7 +480,7 @@ app.post('/api/addservices', authenticateToken, (req, res) => {
 app.delete('/api/delservices/szolgaltatas_id', authenticateToken, (req, res) => {
     const szolgaltatas_id = req.params.szolgaltatas_id;
     console.log(szolgaltatas_id);
-    const sql = ('DELETE FROM szolgaltatasok WHERE `szolgaltatasok`.`szolgaltatas_id` = ?');
+    const sql = ('DELETE FROM szolgaltatasok WHERE szolgaltatasok.szolgaltatas_id = ?');
     pool.query(sql, [szolgaltatas_id], (err, result) => {
         if (err) {
             console.log(err);
