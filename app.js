@@ -433,8 +433,13 @@ app.post('/api/booking', authenticateToken, (req, res) => {
 
 });
 //kategoria felvitel
-app.post('/api/addcategory', authenticateToken, (req, res) => {
-    const { nev, kep } = req.body;
+app.post('/api/addcategory', authenticateToken, upload.single('kep'), (req, res) => {
+    const { nev} = req.body;
+    const kep = req.file ? req.file.filename : null;
+    if (kep === null) {
+        return res.status(400).json({ error: 'Válassz ki egy képet' });
+    }
+
     const sql = (' INSERT INTO `kategoriak` (`kategoria_id`, `nev`, `kep`) VALUES (NULL, ?, ?);');
     pool.query(sql, [nev, kep], (err, result) => {
         if (err) {
@@ -442,7 +447,7 @@ app.post('/api/addcategory', authenticateToken, (req, res) => {
             return res.status(500).json({ error: 'Hiba' });
         }
         console.log(result);
-        return res.status(201).json({ message: 'Sikeres felvitel' });
+        return res.status(201).json({ message: 'Sikeres felvitel', kategoria_id: result.insertId });
     });
 });
 //kategoria törlés
