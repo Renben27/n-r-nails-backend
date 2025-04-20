@@ -1,7 +1,7 @@
- # N&R Nails Backend dokumentáció
+ #📚 N&R Nails Backend dokumentáció
 
- ## Projektről
- Az N&R Nails webalkalmazás egy modern és felhasználóbarát platform, amely kifejezetten egy körömszalon igényeire lett szabva. A projekt célja egy olyan online felület létrehozása volt, ahol az ügyfelek könnyedén tudnak időpontot foglalni a kívánt szolgáltatásokra, kapcsolatba léphetnek a szalon munkatársaival, valamint megoszthatják tapasztalataikat és véleményüket. A rendszer automatizálja az időpontfoglalási folyamatot, így mind a vendégek, mind a szalon munkatársai számára kényelmesebb és átláthatóbb működést tesz lehetővé. A véleményírási lehetőség pedig hozzájárul a folyamatos fejlődéshez és a vendégek elégedettségének növeléséhez.
+ ## Projekt áttekintés
+ Az N&R Nails webalkalmazás egy modern és felhasználóbarát platform, amely kifejezetten egy körömszalon igényeire lett szabva. A projekt célja egy olyan online felület létrehozása volt, ahol az ügyfelek könnyedén tudnak időpontot foglalni, kapcsolatba léphetnek a szalon munkatársaival, valamint megoszthatják tapasztalataikat és véleményüket. A véleményírási lehetőség pedig hozzájárul a folyamatos fejlődéshez és a vendégek elégedettségének növeléséhez.
 
 ---
 ## Készítette🎀
@@ -9,10 +9,37 @@
 - Pásztór Nóra
 
 ---
-## Fejlesztői környezet
-- Node.js
-- MySQL
+ ## 📑 Tartalomjegyzék
 
+- [Projekt áttekintés](#projekt-áttekintés)
+- [Technológiák](#technológiák)
+- [Telepítés](#telepítés)
+- [Környezet változók](#környezet-változók)
+- [API végpontok](#api-végpontok)
+- [Adatbázis séma (DrawSQL)](#adatbázis-séma-drawsql)
+- [Postman Tesztelés](#postman-tesztelés)
+- [Frontend Link](#frontend-link)
+- [Példaképek](#példaképek)
+- [Fejlesztői információk](#fejlesztői-információk)
+
+ ---
+## 🛠 Technológiák - fejlesztői környezet
+
+- Node.js
+- Express.js
+- MySQL
+- JWT Auth
+- dotenv
+- Postman (teszteléshez)  
+
+---
+ ## ⚙️ Telepítés
+
+```bash
+git clone  
+npm install
+npm run dev
+```
 ---
 ## Adatbázis
 - felhasznalok
@@ -59,5 +86,10 @@
   - felhasznalo_id
   - velemeny
   - datum
-
  
+---
+## DrawSQL
+A programhoz miren valo:.... és a link
+
+
+
