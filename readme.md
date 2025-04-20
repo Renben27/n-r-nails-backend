@@ -88,8 +88,29 @@ npm run dev
   - datum
  
 ---
-## DrawSQL
-A programhoz miren valo:.... és a link
+##🧩 Adatbázis séma (DrawSQL) 
+- [👉 Nézd meg a DrawSQL diagramot itt](https://drawsql.app/teams/hungarybaross/diagrams/nrnailsv)
+- Vagy akár itt is! ![image](https://github.com/user-attachments/assets/0df3c6c4-9fe7-4ac3-9686-c39ba324c559)
+
+ ---
+## 🌐 Frontend Link
+A backendhez tartozó frontend itt érhető el: 🔗 Frontend alkalmazás
+
+ ---
+
+ ## 📡 API végpontok
+
+Az alábbi táblázatban találhatók az API végpontok és azok leírása. Minden végponthoz tartozik a HTTP metódus, az útvonal, valamint a leírás, hogy mi történik a hívás során.
+
+| Módszer | Útvonal         | Leírás                                   | Paraméterek                       | Hitelesítés |
+|---------|-----------------|------------------------------------------|------------------------------------|-------------|
+| **GET** | /api/books      | Könyvek listázása                        | -                                  | ✅ Igen     |
+| **POST**| /api/books      | Új könyv hozzáadása                      | `title`, `author`, `year` (body)   | ✅ Igen     |
+| **GET** | /api/books/:id  | Egy könyv adatainak lekérése             | `id` (URL paraméter)               | ✅ Igen     |
+| **PUT** | /api/books/:id  | Könyv frissítése                         | `id` (URL paraméter), `title`, `author`, `year` (body) | ✅ Igen     |
+| **DELETE** | /api/books/:id | Könyv törlése                           | `id` (URL paraméter)               | ✅ Igen     |
+| **POST**| /api/login      | Bejelentkezés                            | `email`, `password` (body)         | ❌ Nem      |
+| **POST**| /api/register   | Regisztráció                             | `email`, `password` (body)         | ❌ Nem      |
 
 
 
