@@ -33,6 +33,19 @@
 - Postman (teszteléshez)  
 
 ---
+## Használt csomagok
+- express
+- mysql2
+- bcryptjs
+- dotenv
+- jsonwebtoken
+- multer
+- fs
+- path
+- validator
+- cors
+- cookie-parser
+ ---
  ## ⚙️ Telepítés
 
 ```bash
@@ -104,13 +117,15 @@ Az alábbi táblázatban találhatók az API végpontok és azok leírása. Mind
 
 | Módszer | Útvonal         | Leírás                                   | Paraméterek                       | Hitelesítés |
 |---------|-----------------|------------------------------------------|------------------------------------|-------------|
-| **GET** | /api/books      | Könyvek listázása                        | -                                  | ✅ Igen     |
+| **GET** | /api/getProfile      | adatok betöltése                       | -                                  | ✅ Igen     |
 | **POST**| /api/books      | Új könyv hozzáadása                      | `title`, `author`, `year` (body)   | ✅ Igen     |
 | **GET** | /api/books/:id  | Egy könyv adatainak lekérése             | `id` (URL paraméter)               | ✅ Igen     |
-| **PUT** | /api/books/:id  | Könyv frissítése                         | `id` (URL paraméter), `title`, `author`, `year` (body) | ✅ Igen     |
+| **PUT** | /api/profile  | profil szerkesztése                         | `id` (URL paraméter), `title`, `author`, `year` (body) | ✅ Igen     |
 | **DELETE** | /api/books/:id | Könyv törlése                           | `id` (URL paraméter)               | ✅ Igen     |
-| **POST**| /api/login      | Bejelentkezés                            | `email`, `password` (body)         | ❌ Nem      |
-| **POST**| /api/register   | Regisztráció                             | `email`, `password` (body)         | ❌ Nem      |
+| **POST**| /api/login      | Bejelentkezés                            | email, psw (body)         | ❌ Nem      |
+| **POST**| /api/logout     | Kijelentkezés                            | -         | ✅ Igen      |
+
+| **POST**| /api/register   | Regisztráció                             | email, psw, felhasznev (body)         | ❌ Nem      |
 
 
 
