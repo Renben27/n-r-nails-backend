@@ -9,18 +9,19 @@
 - Pásztór Nóra
 
 ---
- ## 📑 Tartalomjegyzék
+ 
+## 📑 Tartalomjegyzék
 
 - [Projekt áttekintés](#projekt-áttekintés)
-- [Technológiák](#technológiák)
+- [Készítette](#készítette)
+- [Technológiák - fejlesztői környezet](#technológiák---fejlesztői-környezet)
+- [Használt csomagok](#használt-csomagok)
 - [Telepítés](#telepítés)
-- [Környezet változók](#környezet-változók)
-- [API végpontok](#api-végpontok)
+- [Adatbázis](#adatbázis)
 - [Adatbázis séma (DrawSQL)](#adatbázis-séma-drawsql)
-- [Postman Tesztelés](#postman-tesztelés)
 - [Frontend Link](#frontend-link)
-- [Példaképek](#példaképek)
-- [Fejlesztői információk](#fejlesztői-információk)
+- [API végpontok](#api-végpontok)
+
 
  ---
 ## 🛠 Technológiák - fejlesztői környezet
