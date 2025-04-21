@@ -136,5 +136,7 @@ Az alábbi táblázatban találhatók az API végpontok és azok leírása. Mind
 | **POST**| /api/logout     | Kijelentkezés                            | - | ✅ Igen |
  | **POST**| /api/register   | Regisztráció                             | `email`, `psw`, `felhasznev` (body) | ❌ Nem      |
 
-
+ ---
+ ## 👩‍💼 Admin
+ A bejelentkezésakor a végpont megvizsgálja a szerepkört ami 0 illetve 1-ből áll a 0-user az 1-admin.
 
