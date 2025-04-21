@@ -12,16 +12,17 @@
  
 ## 📑 Tartalomjegyzék
 
+- [N&R Nails Backend dokumentáció](#nr-nails-backend-dokumentáció)
 - [Projekt áttekintés](#projekt-áttekintés)
 - [Készítette](#készítette)
+- [Tartalomjegyzék](#tartalomjegyzék)
 - [Technológiák - fejlesztői környezet](#technológiák---fejlesztői-környezet)
 - [Használt csomagok](#használt-csomagok)
-- [Telepítés](#-telepítés)
+- [Telepítés](#telepítés)
 - [Adatbázis](#adatbázis)
 - [Adatbázis séma (DrawSQL)](#adatbázis-séma-drawsql)
 - [Frontend Link](#frontend-link)
 - [API végpontok](#api-végpontok)
-
 
  ---
 ## 🛠 Technológiák - fejlesztői környezet
