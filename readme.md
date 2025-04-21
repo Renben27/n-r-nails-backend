@@ -16,7 +16,7 @@
 - [Készítette](#készítette)
 - [Technológiák - fejlesztői környezet](#technológiák---fejlesztői-környezet)
 - [Használt csomagok](#használt-csomagok)
-- [Telepítés](#telepítés)
+- [Telepítés](#-telepítés)
 - [Adatbázis](#adatbázis)
 - [Adatbázis séma (DrawSQL)](#adatbázis-séma-drawsql)
 - [Frontend Link](#frontend-link)
