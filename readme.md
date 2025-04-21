@@ -49,7 +49,7 @@
  ## ⚙️ Telepítés
 
 ```bash
-git clone  
+git clone  https://github.com/Renben27/n-r-nails-backend.git
 npm install
 npm run dev
 ```
@@ -117,15 +117,26 @@ Az alábbi táblázatban találhatók az API végpontok és azok leírása. Mind
 
 | Módszer | Útvonal         | Leírás                                   | Paraméterek                       | Hitelesítés |
 |---------|-----------------|------------------------------------------|------------------------------------|-------------|
-| **GET** | /api/getProfile      | adatok betöltése                       | -                                  | ✅ Igen     |
-| **POST**| /api/books      | Új könyv hozzáadása                      | `title`, `author`, `year` (body)   | ✅ Igen     |
-| **GET** | /api/books/:id  | Egy könyv adatainak lekérése             | `id` (URL paraméter)               | ✅ Igen     |
-| **PUT** | /api/profile  | profil szerkesztése                         | `id` (URL paraméter), `title`, `author`, `year` (body) | ✅ Igen     |
-| **DELETE** | /api/books/:id | Könyv törlése                           | `id` (URL paraméter)               | ✅ Igen     |
-| **POST**| /api/login      | Bejelentkezés                            | email, psw (body)         | ❌ Nem      |
-| **POST**| /api/logout     | Kijelentkezés                            | -         | ✅ Igen      |
+| **GET** | /api/getProfile      | Adatok betöltése                       | - | ✅ Igen     |
+| **POST**| /api/upload      | Új kép feltöltése                      | `kep ` (body)   | ✅ Igen     |
+| **GET** | /api/images  | Képek lekérése             |                 | ✅ Igen     |
+| **POST**| /api/addcategory      | Új kategória felvétele                      | `kep ` `nev ` (body)   | ✅ Igen     |
+ | **DELETE** | /api/delcategory | Kategória törlése                           | `id` (URL paraméter) | ✅ Igen     |
+ 
+| **POST**| /api/addservices      | Új szolgáltatás felvétele                      |  `kategoria_id`, `nev`, `ar` (body)   | ✅ Igen     |
+ | **DELETE** | /api/delservices | Szolgáltatás törlése                           | `id` (URL paraméter) | ✅ Igen     |
+ | **PUT** | /api/changeservices  | Szolgáltatás szerkesztése                         |`kategoria_id`, `nev`, `ar` (body), `id` (URL paraméter)   | ✅ Igen     |
+| **PUT** | /api/profile  | Profil szerkesztése                         | `name`, `phone`, `email`  (body),  | ✅ Igen     |
+| **PUT** | /api/passwordChange  | Jelszó módosítása                         | `oldPassword`, `newPassword`  (body),  | ✅ Igen     |
 
-| **POST**| /api/register   | Regisztráció                             | email, psw, felhasznev (body)         | ❌ Nem      |
+| **POST**| /api/contact      | Kapcsolat felvétele                      |  `nev`, `telefon`, `email`, `uzenet` (body)   | ✅ Igen     |
+| **POST**| /api/velemeny      | Vélemény írása                     |  `velemeny `  (body)   | ✅ Igen     |
+
+| **DELETE** | /api/books/:id | Könyv törlése                           | `id` (URL paraméter) | ✅ Igen     |
+| **POST**| /api/login      | Bejelentkezés                            | `email`, `psw` (body) | ❌ Nem      |
+| **POST**| /api/logout     | Kijelentkezés                            | - | ✅ Igen |
+
+| **POST**| /api/register   | Regisztráció                             | `email`, `psw`, `felhasznev` (body) | ❌ Nem      |
 
 
 
