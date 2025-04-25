@@ -1,8 +1,7 @@
  # 📚 N&R Nails Backend dokumentáció
 
- ## [Projekt áttekintés](#projekt-áttekintés)
- Az N&R Nails webalkalmazás egy modern és felhasználóbarát platform, amely kifejezetten egy körömszalon igényeire lett szabva. A projekt célja egy olyan online felület létrehozása volt, ahol az ügyfelek könnyedén tudnak időpontot foglalni, kapcsolatba léphetnek a szalon munkatársaival, valamint megoszthatják tapasztalataikat és véleményüket. A véleményírási lehetőség pedig hozzájárul a folyamatos fejlődéshez és a vendégek elégedettségének növeléséhez.
-
+ ## Projekt áttekintés
+##### Az N&R Nails webalkalmazás egy modern és felhasználóbarát platform, amely kifejezetten egy körömszalon igényeire lett szabva. A projekt célja egy olyan online felület létrehozása volt, ahol az ügyfelek könnyedén tudnak időpontot foglalni, kapcsolatba léphetnek a szalon munkatársaival, valamint megoszthatják tapasztalataikat és véleményüket. A véleményírási lehetőség pedig hozzájárul a folyamatos fejlődéshez és a vendégek elégedettségének növeléséhez.
 ---
 ## Készítette🎀
 - Horváth Renáta
@@ -12,41 +11,57 @@
  
 ## 📑 Tartalomjegyzék
 
-- [N&R Nails Backend dokumentáció](#nr-nails-backend-dokumentáció)
-- [Projekt áttekintés](#projekt-áttekintés)
-- [Készítette](#készítette)
-- [Tartalomjegyzék](#tartalomjegyzék)
-- [Technológiák - fejlesztői környezet](#technológiák---fejlesztői-környezet)
+- [Technológiák - fejlesztői környezet](#technológiák--fejlesztői-környezet)
 - [Használt csomagok](#használt-csomagok)
 - [Telepítés](#telepítés)
-- [Adatbázis](#adatbázis)
+- [Projekt szerkezet](#projekt-szerkezet)
+- [Adatbázis](#adatbázisű)
 - [Adatbázis séma (DrawSQL)](#adatbázis-séma-drawsql)
 - [Frontend Link](#frontend-link)
 - [API végpontok](#api-végpontok)
+- [Biztonság](#biztonság)
+- [Postman tesztelés](#postman-tesztelés)
 
  ---
-## 🛠 Technológiák - fejlesztői környezet
+## Technológiák-fejlesztői környezet 🛠 
 
-- Node.js
-- Express.js
-- MySQL
-- JWT Auth
-- dotenv
-- Postman (teszteléshez)  
+- **Node.js**: *Futattókörnyezet, amely lehetővé teszi a JavaScript szerveroldali futtatását.*
+- **Express.js**: *Keretrendszer szerveroldali API-k létrehozásához.*
+- **MySQL**: *Relációs adatbázis-kezelő rendszer.*
+- **JWT Auth**: *Hitelesítési és jogosultságkezelési mechanizmus JSON Web Tokenek segítségével.*
+- **dotenv**: *Környezeti változók kezelésére használt csomag.*
+- **Postman**: *Tesztelési eszköz API-k funkcionalitásának és válaszainak ellenőrzésére.*
 
 ---
 ## Használt csomagok
-- express
-- mysql2
-- bcryptjs
-- dotenv
-- jsonwebtoken
-- multer
-- fs
-- path
-- validator
-- cors
-- cookie-parser
+- [express](https://www.npmjs.com/package/express)
+- [mysql2](https://www.npmjs.com/package/mysql2)
+- [bcryptjs](https://www.npmjs.com/package/bcryptjs)
+- [dotenv](https://www.npmjs.com/package/dotenv)
+- [jsonwebtoken](https://www.npmjs.com/package/jsonwebtoken)
+- [multer](https://www.npmjs.com/package/multer)
+- [fs](https://www.npmjs.com/package/fs)
+- [path](https://www.npmjs.com/package/path)
+- [validator](https://www.npmjs.com/package/validator)
+- [cors](https://www.npmjs.com/package/cors)
+- [cookie-parser](https://www.npmjs.com/package/cookie-parser)
+```bash
+"dependencies": {
+    "bcryptjs": "^3.0.2",
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "jsonwebtoken": "^9.0.2",
+    "multer": "^1.4.5-lts.1",
+    "mysql2": "^3.12.0",
+    "path": "^0.12.7",
+    "validator": "^13.12.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.9"
+  }
+  ```
  ---
  ## ⚙️ Telepítés
 
@@ -55,6 +70,8 @@ git clone  https://github.com/Renben27/n-r-nails-backend.git
 npm install
 npm run dev
 ```
+---
+## Projekt szerkezet
 ---
 ## Adatbázis
 - felhasznalok
@@ -109,7 +126,7 @@ npm run dev
 
  ---
 ## 🌐 Frontend Link
-A backendhez tartozó frontend itt érhető el: 🔗 Frontend alkalmazás
+A backendhez tartozó frontend itt érhető el: 🔗 [N&R Nails Frontend]()
 
  ---
 
@@ -127,8 +144,8 @@ Az alábbi táblázatban találhatók az API végpontok és azok leírása. Mind
  | **POST**| /api/addservices      | Új szolgáltatás felvétele                      |  `kategoria_id`, `nev`, `ar` (body)   | ✅ Igen     |
  | **DELETE** | /api/delservices | Szolgáltatás törlése                           | `id` (URL paraméter) | ✅ Igen     |
  | **PUT** | /api/changeservices  | Szolgáltatás szerkesztése                         |`kategoria_id`, `nev`, `ar` (body), `id` (URL paraméter)   | ✅ Igen     |
-| **PUT** | /api/profile  | Profil szerkesztése                         | `name`, `phone`, `email`  (body),  | ✅ Igen     |
-| **PUT** | /api/passwordChange  | Jelszó módosítása                         | `oldPassword`, `newPassword`  (body),  | ✅ Igen     |
+| **PUT** | /api/profile  | Profil szerkesztése                         | `name`, `phone`, `email`  (body)  | ✅ Igen     |
+| **PUT** | /api/passwordChange  | Jelszó módosítása                         | `oldPassword`, `newPassword`  (body)  | ✅ Igen     |
  | **POST**| /api/contact      | Kapcsolat felvétele                      |  `nev`, `telefon`, `email`, `uzenet` (body)   | ✅ Igen     |
 | **POST**| /api/velemeny      | Vélemény írása                     |  `velemeny `  (body)   | ✅ Igen     |
  | **DELETE** | /api/books/:id | Könyv törlése                           | `id` (URL paraméter) | ✅ Igen     |
@@ -140,3 +157,11 @@ Az alábbi táblázatban találhatók az API végpontok és azok leírása. Mind
  ## 👩‍💼 Admin
  A bejelentkezésakor a végpont megvizsgálja a szerepkört ami 0 illetve 1-ből áll a 0-user az 1-admin.
 
+ ## Biztonság
+- JWT token alapú hitelesítés
+- Jelszavak bcryptjs segítségével vannak hashelve
+- A .env fájl tartalmaz minden érzékeny adatot – ne oszd meg publikusan!
+
+## Postman tesztelés
+Postman tesztelési link-> ![ITT](https://img.shields.io/badge/ITT-purple
+)
