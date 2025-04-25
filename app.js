@@ -254,19 +254,7 @@ app.get('/api/images', authenticateToken, (req, res) => {
         return res.status(200).json(result);
     })
 })
-//az összes meme (ez esetben kártya/lépek) lekérdezése
-app.get('/api/memes', authenticateToken, (req, res) => {
-    const sql = 'SELECT uploads.upload_id, uploads.meme, uploads.user_id, users.name, users.profile_pic, COUNT(likes.upload_id) AS "like" FROM uploads JOIN users ON uploads.user_id = users.user_id JOIN likes ON uploads.upload_id = likes.upload_id GROUP BY(upload_id);';
-    pool.query(sql, (err, result) => {
-        if (err) {
-            return res.status(500).json({ error: 'Hiba az SQL-ben' })
-        }
-        if (result.length === 0) {
-            return res.status(404).json({ error: 'Nincs még meme' })
-        }
-        return res.status(200).json(result);
-    });
-});
+
 // profil szerkesztés
 app.put('/api/profile', authenticateToken, (req, res) => {
     const felhasznalo_id = req.user.id;
