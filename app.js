@@ -413,24 +413,24 @@ app.post('/api/upload', authenticateToken, upload.single('kep'), (req, res) => {
 
 //idopontfoglalas
 app.post('/api/booking', authenticateToken, (req, res) => {
-    const { datum, szolgaltatas_id } = req.body;
-    const felhasznalo_id = req.user.id;
+    console.log('Request body:', req.body);  // A beérkező adatokat logoljuk
+    const { felhasznalo_id, datum, szolgaltatas_id } = req.body;
 
-    if (!datum || !szolgaltatas_id) {
-        return res.status(400).json({ error: 'Hiányzó adatok!' });
+    if (!datum) {
+        return res.status(400).json({ error: 'Nincs kiválasztott időpont!' });
     }
 
-    pool.query(
-        'INSERT INTO foglalasok (felhasznalo_id, datum, szolgaltatas_id) VALUES (?, ?, ?)',
-        [felhasznalo_id, datum, szolgaltatas_id],
-        (err, results) => {
-            if (err) {
-                console.error('Foglalási hiba:', err);
-                return res.status(500).json({ error: 'Adatbázis hiba!' });
-            }
-            res.status(200).json({ success: true, message: 'Foglalás sikeres!' });
+    const sql = 'INSERT INTO `foglalasok` (`foglalas_id`, `felhasznalo_id`, `datum`, `szolgaltatas_id`) VALUES (NULL, ?, ?, ?)';
+    
+    pool.query(sql, [felhasznalo_id, datum, szolgaltatas_id], (error, results) => {
+        if (error) {
+            console.error('SQL Hiba:', error);  // SQL hiba naplózása
+            return res.status(500).json({ error: 'Hiba történt a foglalás során!' });
         }
-    );
+        
+        console.log('SQL eredmény:', results);  // A sikeres SQL válasz naplózása
+        return res.status(200).json({ message: 'Sikeres foglalás!' });
+    });
 });
 
 
