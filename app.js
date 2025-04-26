@@ -413,9 +413,10 @@ app.post('/api/upload', authenticateToken, upload.single('kep'), (req, res) => {
 
 //idopontfoglalas
 app.post('/api/booking', authenticateToken, (req, res) => {
-    console.log('Request body:', req.body);  // A beérkező adatokat logoljuk
-    const { felhasznalo_id, datum, szolgaltatas_id } = req.body;
-
+    const felhasznalo_id =req.user.id;
+    const { datum, szolgaltatas_id } = req.body;
+    console.log(felhasznalo_id, datum, szolgaltatas_id);
+    
     if (!datum) {
         return res.status(400).json({ error: 'Nincs kiválasztott időpont!' });
     }
@@ -432,7 +433,54 @@ app.post('/api/booking', authenticateToken, (req, res) => {
         return res.status(200).json({ message: 'Sikeres foglalás!' });
     });
 });
+//kategóriák lekérése a kirajzoláshoz services.html-ben
+app.get('/api/services', (req, res) => {
+    const query = `
+        SELECT k.kategoria_id, k.nev AS kategoria_nev, k.kep, s.szolgaltatas_id, s.nev AS szolgaltatas_nev, s.ar
+        FROM kategoriak k
+        LEFT JOIN szolgaltatasok s ON k.kategoria_id = s.kategoria_id
+        ORDER BY k.kategoria_id, s.szolgaltatas_id;
+    `;
 
+    pool.query(query, (err, result) => {
+        if (err) {
+            console.log('Adatbázis hiba:', err);
+            return res.status(500).json({ error: 'Adatbázis hiba' });
+        }
+        res.json(result.rows);
+    });
+});
+
+// a server.js-ben vagy ahol a backend fut
+
+app.get('/api/category-data/:kategoria_id', (req, res) => {
+    const kategoriaId = req.params.kategoria_id;
+
+    pool.query('SELECT nev, kep FROM kategoriak WHERE kategoria_id = ?', [kategoriaId], (err, categoryResult) => {
+        if (err) {
+            console.log('Hiba a kategória lekérdezésekor:', err);
+            return res.status(500).json({ error: 'Adatbázis hiba (kategória)' });
+        }
+
+        if (categoryResult.length === 0) {
+            return res.status(404).json({ error: 'Nincs ilyen kategória' });
+        }
+
+        const kategoria = categoryResult[0];
+
+        pool.query('SELECT szolgaltatas_id, nev, ar FROM szolgaltatasok WHERE kategoria_id = ?', [kategoriaId], (err, servicesResult) => {
+            if (err) {
+                console.log('Hiba a szolgáltatások lekérdezésekor:', err);
+                return res.status(500).json({ error: 'Adatbázis hiba (szolgáltatások)' });
+            }
+
+            res.json({
+                kategoria,
+                szolgaltatasok: servicesResult
+            });
+        });
+    });
+});
 
 //kategoria felvitel
 app.post('/api/addcategory', authenticateToken, upload.single('kep'), (req, res) => {
