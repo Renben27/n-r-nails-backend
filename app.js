@@ -413,13 +413,27 @@ app.post('/api/upload', authenticateToken, upload.single('kep'), (req, res) => {
 
 //idopontfoglalas
 app.post('/api/booking', authenticateToken, (req, res) => {
-    const { felhasznalo_id, datum, szolgaltatas_id } = req.body;
-    const sql = ('INSERT INTO `foglalasok` (`foglalas_id`, `felhasznalo_id`, `datum`, `szolgaltatas_id`) VALUES (NULL, ?, current_timestamp(), ?)');
-    if (datum === null) {
-        return res.status(400).json({ error: 'Nincs kiválasztott időpont!' });
+    const { datum, szolgaltatas_id } = req.body;
+    const felhasznalo_id = req.user.id;
+
+    if (!datum || !szolgaltatas_id) {
+        return res.status(400).json({ error: 'Hiányzó adatok!' });
     }
 
+    pool.query(
+        'INSERT INTO foglalasok (felhasznalo_id, datum, szolgaltatas_id) VALUES (?, ?, ?)',
+        [felhasznalo_id, datum, szolgaltatas_id],
+        (err, results) => {
+            if (err) {
+                console.error('Foglalási hiba:', err);
+                return res.status(500).json({ error: 'Adatbázis hiba!' });
+            }
+            res.status(200).json({ success: true, message: 'Foglalás sikeres!' });
+        }
+    );
 });
+
+
 //kategoria felvitel
 app.post('/api/addcategory', authenticateToken, upload.single('kep'), (req, res) => {
     const { nev } = req.body;
