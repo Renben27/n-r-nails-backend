@@ -544,6 +544,30 @@ app.post('/api/velemeny', authenticateToken, (req, res) => {
         res.status(201).json({ message: "Vélemény sikeresen mentve!" });
     });
 });
+/*vélemények lekérése*/
+app.get('/api/getopinions', authenticateToken, (req, res) => {
+    const limit = 10; // maximum 10 vélemény
+    const offset = parseInt(req.query.offset) || 0; // lehet majd lapozni is, ha szükséges
+
+    pool.query(`
+        SELECT v.velemeny_id, v.velemeny, v.datum, f.nev
+        FROM velemenyek v
+        JOIN felhasznalok f ON v.felhasznalo_id = f.felhasznalo_id
+        ORDER BY v.datum DESC
+        LIMIT ? OFFSET ?
+    `, [limit, offset], (err, results) => {
+        if (err) {
+            console.error('Hiba a vélemények lekérdezésekor:', err);
+            return res.status(500).json({ message: 'Adatbázis hiba.' });
+        }
+
+        if (results.length === 0) {
+            return res.status(404).json({ message: 'Nincsenek további vélemények.' });
+        }
+
+        res.json(results);
+    });
+});
 
 app.listen(PORT, () => {
     console.log(`IP: https://${HOSTNAME}:${PORT}`);
