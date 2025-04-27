@@ -490,7 +490,7 @@ app.get('/api/categories-with-services', (req, res) => {
       ORDER BY k.kategoria_id, s.szolgaltatas_id
     `;
 
-    pool.query(sql, (err, result) => {
+    pool.query(sql, (err, rows) => {//result-rows
         if (err) {
             console.error('Hiba az adatbázis lekérdezéskor:', err);
             res.status(500).json({ error: 'Adatbázis hiba' });
@@ -498,7 +498,8 @@ app.get('/api/categories-with-services', (req, res) => {
         }
 
         const categories = {};
-        rows.forEach(row => {
+
+        rows.forEach(row => {   // <-- most jó, mert van rows!
             if (!categories[row.kategoria_id]) {
                 categories[row.kategoria_id] = {
                     kategoria_id: row.kategoria_id,
@@ -517,10 +518,10 @@ app.get('/api/categories-with-services', (req, res) => {
             }
         });
 
-        // Csak a kategóriák listáját küldjük vissza
         res.json(Object.values(categories));
     });
 });
+
 
 //kategoria felvitel
 app.post('/api/addcategory', authenticateToken, upload.single('kep'), (req, res) => {
