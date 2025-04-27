@@ -451,36 +451,44 @@ app.get('/api/services', (req, res) => {
     });
 });
 
-// a server.js-ben vagy ahol a backend fut
-
-app.get('/api/category-data/:kategoria_id', (req, res) => {
-    const kategoriaId = req.params.kategoria_id;
-
-    pool.query('SELECT nev, kep FROM kategoriak WHERE kategoria_id = ?', [kategoriaId], (err, categoryResult) => {
-        if (err) {
-            console.log('Hiba a kategória lekérdezésekor:', err);
-            return res.status(500).json({ error: 'Adatbázis hiba (kategória)' });
-        }
-
-        if (categoryResult.length === 0) {
-            return res.status(404).json({ error: 'Nincs ilyen kategória' });
-        }
-
-        const kategoria = categoryResult[0];
-
-        pool.query('SELECT szolgaltatas_id, nev, ar FROM szolgaltatasok WHERE kategoria_id = ?', [kategoriaId], (err, servicesResult) => {
-            if (err) {
-                console.log('Hiba a szolgáltatások lekérdezésekor:', err);
-                return res.status(500).json({ error: 'Adatbázis hiba (szolgáltatások)' });
-            }
-
-            res.json({
-                kategoria,
-                szolgaltatasok: servicesResult
-            });
-        });
+// A megadott kategoria_id alapján adja vissza a kategóriát és a hozzá tartozó szolgáltatásokat
+app.get('/api/category/:kategoria_id', (req, res) => {
+    const { kategoria_id } = req.params;
+    const sql = `
+      SELECT k.kategoria_id, k.nev AS kategoria_nev, k.kep,
+             s.szolgaltatas_id, s.nev AS szolgaltatas_nev, s.ar
+      FROM kategoriak k
+      LEFT JOIN szolgaltatasok s ON k.kategoria_id = s.kategoria_id
+      WHERE k.kategoria_id = ?
+    `;
+    
+    pool.query(sql, [kategoria_id], (err, rows) => {
+      if (err) {
+        console.error('Hiba az adatbázis lekérdezéskor:', err);
+        res.status(500).json({ error: 'Adatbázis hiba' });
+        return;
+      }
+  
+      if (rows.length === 0) {
+        return res.status(404).json({ error: 'Kategória nem található' });
+      }
+  
+      // Az adatokat egy objektumba rendezzük
+      const category = {
+        kategoria_id: rows[0].kategoria_id,
+        nev: rows[0].kategoria_nev,
+        kep: rows[0].kep,
+        szolgaltatasok: rows.map(row => ({
+          szolgaltatas_id: row.szolgaltatas_id,
+          nev: row.szolgaltatas_nev,
+          ar: row.ar
+        }))
+      };
+  
+      res.json(category); // Visszaküldjük a kért kategóriát és a szolgáltatásokat
     });
-});
+  });
+  
 app.get('/api/categories-with-services', (req, res) => {
     const sql = `
       SELECT k.kategoria_id, k.nev AS kategoria_nev, k.kep,
