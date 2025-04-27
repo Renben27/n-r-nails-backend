@@ -481,7 +481,48 @@ app.get('/api/category-data/:kategoria_id', (req, res) => {
         });
     });
 });
-
+app.get('/api/categories-with-services', (req, res) => {
+    const sql = `
+      SELECT k.kategoria_id, k.nev AS kategoria_nev, k.kep,
+             s.szolgaltatas_id, s.nev AS szolgaltatas_nev, s.ar
+      FROM kategoriak k
+      LEFT JOIN szolgaltatasok s ON k.kategoria_id = s.kategoria_id
+      ORDER BY k.kategoria_id, s.szolgaltatas_id
+    `;
+  
+    pool.query(sql, (err, result) => {
+      if (err) {
+        console.error('Hiba az adatbázis lekérdezéskor:', err);
+        res.status(500).json({ error: 'Adatbázis hiba' });
+        return;
+      }
+  
+      // Feldolgozzuk az adatokat
+      const categoriesMap = {};
+  
+      result.rows.forEach(row => {
+        if (!categoriesMap[row.kategoria_id]) {
+          categoriesMap[row.kategoria_id] = {
+            kategoria_id: row.kategoria_id,
+            nev: row.kategoria_nev,
+            kep: row.kep,
+            szolgaltatasok: []
+          };
+        }
+        if (row.szolgaltatas_id) {
+          categoriesMap[row.kategoria_id].szolgaltatasok.push({
+            szolgaltatas_id: row.szolgaltatas_id,
+            nev: row.szolgaltatas_nev,
+            ar: row.ar
+          });
+        }
+      });
+  
+      const categoriesArray = Object.values(categoriesMap);
+      res.json(categoriesArray);
+    });
+  });
+  
 //kategoria felvitel
 app.post('/api/addcategory', authenticateToken, upload.single('kep'), (req, res) => {
     const { nev } = req.body;
