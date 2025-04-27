@@ -19,8 +19,8 @@ app.use(cors({
     credentials: true
 }));
 app.use(cookieParser());
-app.use('/uploads', express.static('uploads'));
-
+//app.use('/uploads', express.static('uploads'));
+app.use('/images', express.static('uploads'));
 dotenv.config();
 const PORT = process.env.PORT;
 const HOSTNAME = process.env.HOSTNAME;
