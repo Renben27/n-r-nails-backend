@@ -413,22 +413,22 @@ app.post('/api/upload', authenticateToken, upload.single('kep'), (req, res) => {
 
 //idopontfoglalas
 app.post('/api/booking', authenticateToken, (req, res) => {
-    const felhasznalo_id =req.user.id;
+    const felhasznalo_id = req.user.id;
     const { datum, szolgaltatas_id } = req.body;
     console.log(felhasznalo_id, datum, szolgaltatas_id);
-    
+
     if (!datum) {
         return res.status(400).json({ error: 'Nincs kiválasztott időpont!' });
     }
 
     const sql = 'INSERT INTO `foglalasok` (`foglalas_id`, `felhasznalo_id`, `datum`, `szolgaltatas_id`) VALUES (NULL, ?, ?, ?)';
-    
+
     pool.query(sql, [felhasznalo_id, datum, szolgaltatas_id], (error, results) => {
         if (error) {
             console.error('SQL Hiba:', error);  // SQL hiba naplózása
             return res.status(500).json({ error: 'Hiba történt a foglalás során!' });
         }
-        
+
         console.log('SQL eredmény:', results);  // A sikeres SQL válasz naplózása
         return res.status(200).json({ message: 'Sikeres foglalás!' });
     });
@@ -489,40 +489,39 @@ app.get('/api/categories-with-services', (req, res) => {
       LEFT JOIN szolgaltatasok s ON k.kategoria_id = s.kategoria_id
       ORDER BY k.kategoria_id, s.szolgaltatas_id
     `;
-  
+
     pool.query(sql, (err, result) => {
-      if (err) {
-        console.error('Hiba az adatbázis lekérdezéskor:', err);
-        res.status(500).json({ error: 'Adatbázis hiba' });
-        return;
-      }
-  
-      // Feldolgozzuk az adatokat
-      const categoriesMap = {};
-  
-      result.rows.forEach(row => {
-        if (!categoriesMap[row.kategoria_id]) {
-          categoriesMap[row.kategoria_id] = {
-            kategoria_id: row.kategoria_id,
-            nev: row.kategoria_nev,
-            kep: row.kep,
-            szolgaltatasok: []
-          };
+        if (err) {
+            console.error('Hiba az adatbázis lekérdezéskor:', err);
+            res.status(500).json({ error: 'Adatbázis hiba' });
+            return;
         }
-        if (row.szolgaltatas_id) {
-          categoriesMap[row.kategoria_id].szolgaltatasok.push({
-            szolgaltatas_id: row.szolgaltatas_id,
-            nev: row.szolgaltatas_nev,
-            ar: row.ar
-          });
-        }
-      });
-  
-      const categoriesArray = Object.values(categoriesMap);
-      res.json(categoriesArray);
+
+        const categories = {};
+        rows.forEach(row => {
+            if (!categories[row.kategoria_id]) {
+                categories[row.kategoria_id] = {
+                    kategoria_id: row.kategoria_id,
+                    nev: row.kategoria_nev,
+                    kep: row.kep,
+                    szolgaltatasok: []
+                };
+            }
+
+            if (row.szolgaltatas_id) {
+                categories[row.kategoria_id].szolgaltatasok.push({
+                    szolgaltatas_id: row.szolgaltatas_id,
+                    nev: row.szolgaltatas_nev,
+                    ar: row.ar
+                });
+            }
+        });
+
+        // Csak a kategóriák listáját küldjük vissza
+        res.json(Object.values(categories));
     });
-  });
-  
+});
+
 //kategoria felvitel
 app.post('/api/addcategory', authenticateToken, upload.single('kep'), (req, res) => {
     const { nev } = req.body;
