@@ -165,3 +165,7 @@ Az alábbi táblázatban találhatók az API végpontok és azok leírása. Mind
 ## Postman tesztelés
 Postman tesztelési link-> ![ITT](https://img.shields.io/badge/ITT-purple
 )
+## Oldalon használt hivatkozások
+![Npm]()
+![ChatGPT]()
+![Google]()
