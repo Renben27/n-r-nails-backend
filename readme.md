@@ -15,7 +15,7 @@
 - [Használt csomagok](#használt-csomagok)
 - [Telepítés](#telepítés)
 - [Projekt szerkezet](#projekt-szerkezet)
-- [Adatbázis](#adatbázisű)
+- [Adatbázis](#adatbázis)
 - [Adatbázis séma (DrawSQL)](#adatbázis-séma-drawsql)
 - [Frontend Link](#frontend-link)
 - [API végpontok](#api-végpontok)
