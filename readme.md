@@ -35,6 +35,7 @@
 ---
 ## Használt csomagok
 - [express](https://www.npmjs.com/package/express)
+- [nodemon](https://www.npmjs.com/package/nodemon)
 - [mysql2](https://www.npmjs.com/package/mysql2)
 - [bcryptjs](https://www.npmjs.com/package/bcryptjs)
 - [dotenv](https://www.npmjs.com/package/dotenv)
