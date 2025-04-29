@@ -127,7 +127,7 @@ npm run dev
 
  ---
 ## 🌐 Frontend Link
-A backendhez tartozó frontend itt érhető el: 🔗 [N&R Nails Frontend]()
+A backendhez tartozó frontend itt érhető el: 🔗 [N&R Nails Frontend](https://nandrnails.netlify.app/)
 
  ---
 
