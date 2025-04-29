@@ -14,7 +14,6 @@
 - [Technológiák - fejlesztői környezet](#technológiák--fejlesztői-környezet)
 - [Használt csomagok](#használt-csomagok)
 - [Telepítés](#telepítés)
-- [Projekt szerkezet](#projekt-szerkezet)
 - [Adatbázis](#adatbázis)
 - [Adatbázis séma (DrawSQL)](#adatbázis-séma-drawsql)
 - [Frontend Link](#frontend-link)
@@ -71,8 +70,6 @@ git clone  https://github.com/Renben27/n-r-nails-backend.git
 npm install
 npm run dev
 ```
----
-## Projekt szerkezet
 ---
 ## Adatbázis
 - felhasznalok
@@ -156,7 +153,37 @@ Az alábbi táblázatban találhatók az API végpontok és azok leírása. Mind
 
  ---
  ## 👩‍💼 Admin
- A bejelentkezésakor a végpont megvizsgálja a szerepkört ami 0 illetve 1-ből áll a 0-user az 1-admin.
+ A bejelentkezésakor a végpont bcrypt segítségével megvizsgálja a szerepkört ami 0(user) illetve 1(admin)-ből áll, és így navigálja át az illetőt a megfelelő oldalra.
+ ```bash
+  const isAdmin = user.szerepkor;
+
+        bcrypt.compare(psw, user.psw, (err, isMatch) => {
+            if (err) {
+                console.error("Bcrypt hiba:", err);
+                return res.status(500).json({ error: 'Hiba a jelszó ellenőrzésénél' });
+            }
+
+            if (isMatch) {
+                const token = jwt.sign(
+                    { id: user.felhasznalo_id, isAdmin: user.szerepkor === 'admin' }, // isAdmin ellenőrzés
+                    JWT_SECRET,
+                    { expiresIn: '1y' }
+                );
+
+                res.cookie('auth_token', token, {
+                    httpOnly: true,
+                    secure: true,
+                    sameSite: 'none',
+                    domain: '.nandrnails.netlify.app',
+                    path: '/',
+                    maxAge: 1000 * 60 * 60 * 24 * 30 * 12
+                });
+
+                return res.status(200).json({
+                    message: 'Sikeres bejelentkezés!',
+                    isAdmin
+                });
+```
 
  ## Biztonság
 - JWT token alapú hitelesítés
@@ -167,6 +194,6 @@ Az alábbi táblázatban találhatók az API végpontok és azok leírása. Mind
 Postman tesztelési link-> ![ITT](https://img.shields.io/badge/ITT-purple
 )
 ## Oldalon használt hivatkozások
-![Npm]()
-![ChatGPT]()
-![Google]()
+![Npm](https://www.npmjs.com)
+![ChatGPT](https://www.chatgpt.com)
+![Google](https://www.google.com)
