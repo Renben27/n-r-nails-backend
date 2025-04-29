@@ -11,11 +11,11 @@
  
 ## 📑 Tartalomjegyzék
 
-- [Technológiák - fejlesztői környezet](#technológiák--fejlesztői-környezet)
+- [Technológiák fejlesztői környezet](#technológiák-fejlesztői-környezet)
 - [Használt csomagok](#használt-csomagok)
 - [Telepítés](#telepítés)
 - [Adatbázis](#adatbázis)
-- [Adatbázis séma (DrawSQL)](#adatbázis-séma-drawsql)
+- [Adatbázis séma (DrawSQL)](#adatbázis-séma-(drawsql))
 - [Frontend Link](#frontend-link)
 - [API végpontok](#api-végpontok)
 - [Biztonság](#biztonság)
@@ -194,6 +194,6 @@ Az alábbi táblázatban találhatók az API végpontok és azok leírása. Mind
 Postman tesztelési link-> ![ITT](https://img.shields.io/badge/ITT-purple
 )
 ## Oldalon használt hivatkozások
-![Npm](https://www.npmjs.com)
-![ChatGPT](https://www.chatgpt.com)
-![Google](https://www.google.com)
+-[Npm](https://www.npmjs.com)
+-[ChatGPT](https://www.chatgpt.com)
+-[Google](https://www.google.com)
