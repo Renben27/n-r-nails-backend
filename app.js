@@ -430,7 +430,7 @@ app.post('/api/booking', authenticateToken, (req, res) => {
         }
 
         console.log('SQL eredmény:', results);  // A sikeres SQL válasz naplózása
-        return res.status(200).json({ message: 'Sikeres foglalás!' });
+        return res.status(201).json({ message: 'Sikeres foglalás!' });
     });
 });
 //kategóriák lekérése a kirajzoláshoz services.html-ben
