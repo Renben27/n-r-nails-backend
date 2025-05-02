@@ -356,15 +356,15 @@ app.post('/api/booking', authenticateToken, (req, res) => {
 app.get('/api/myBooking', authenticateToken, (req, res) =>{
 
     const sql = 'SELECT s.nev AS szolgaltatas_nev, s.ar, f.datum FROM foglalasok f JOIN szolgaltatasok s ON f.szolgaltatas_id = s.szolgaltatas_id WHERE f.felhasznalo_id = ? ORDER BY f.datum DESC';
-    pool.query(sql, (err, result) => {
+    pool.query(sql, [req.user.id], (err, result) => {
         if (err) {
             console.log('Adatbázis hiba:', err);
             return res.status(500).json({ error: 'Adatbázis hiba' });
         }
-        if (err) {
-            return res.status(500).json({error: 'Nincs lefoglalt időpont!'})
+        if (result.length === 0) {
+            return res.status(404).json({ error: 'Nincs lefoglalt időpont!' });
         }
-        return res.status(201).json(result);
+        return res.status(200).json(result);
     });
     
 });
