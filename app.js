@@ -271,46 +271,6 @@ app.put('/api/profile', authenticateToken, (req, res) => {
         return res.status(200).json({ message: 'Profil módosítva!' });
     })
 })
-/*
-// profilename szerkesztese
-app.put('/api/editProfileName', authenticateToken, (req, res) => {
-    const felhasznalo_id = req.user.id;
-    const felhasznev = req.body.felhasznev;
-
-    const sql = ' UPDATE felhasznalok SET felhasznev = COALESCE(NULLIF(?, ""),felhasznev) WHERE felhasznalo_id=?';
-    pool.query(sql, [felhasznev, felhasznalo_id], (err, result) => {
-        if (err) {
-            console.log(err);
-            return res.status(500).json({ error: 'Hiba az sql-ben!' });
-        }
-        return res.status(200).json({ message: 'Profil név módosítva!' });
-    })
-});
-*/
-//psw mododsítas
-/*app.put('/api/editProfilePsw', authenticateToken, (req, res) => {
-    const felhasznalo_id = req.user.id;
-    const psw = req.body.psw;
-    const salt = 10;
-
-    if (psw === '' || !validator.isLength(psw, { min: 6 })) {
-        return res.status(400).json({ error: 'A jelszónak min 6 karakternek kell lenni!' });
-    };
-    bcrypt.hash(psw, salt, (err, hash) => {
-        if (err) {
-            return res.status(500).json({ error: 'Hiba a sózáskor!' });
-
-        }
-        const sql = ' UPDATE felhasznalok SET psw = COALESCE(NULLIF(?, ""),psw) WHERE felhasznalo_id=?';
-        pool.query(sql, [hash, felhasznalo_id], (err, result) => {
-            if (err) {
-                console.log(err);
-                return res.status(500).json({ error: 'Hiba az sql-ben!' });
-            }
-            return res.status(200).json({ message: 'Jelszó módosítva ki leszel jelentkeztetve!' });
-        });
-    });
-});*/
 app.put('/api/passwordChange', authenticateToken, (req, res) => {
     const felhasznalo_id = req.user.id;
     const { oldPassword, newPassword } = req.body;
@@ -351,47 +311,6 @@ app.put('/api/passwordChange', authenticateToken, (req, res) => {
         });
     });
 });
-/*const editPassword = (req, res) => {
-    const { oldPassword, newPassword } = req.body;
-    const user_id = req.user.id;
-
-    if (!validator.isLength(newPassword, { min: 6 })) {
-        return res.status(400).json({ error: 'A jelszónak legalább 6 hosszúnak kell lennie' });
-    }
-    const sql = 'SELECT password FROM users WHERE user_id = ?';
-    db.query(sql, [user_id], (err, result) => {
-        if (err) {
-            return res.status(500).json({ error: 'Hiba az SQL-ben' });
-        }
-
-        if (result.length === 0) {
-            return res.status(404).json({ error: 'Nincs ilyen felhasználó' });
-        }
-
-        const user_id = result[0];
-
-        bcrypt.compare(oldPassword, user_id.password, (err, isMatch) => {
-            if (isMatch) {
-                bcrypt.hash(newPassword, 10, (err, hash) => {
-                    if (err) {
-                        return res.status(500).json({ error: 'Hiba a sózáskor!' });
-                    }
-
-                    const sqlUpdate = 'UPDATE users SET password = COALESCE(NULLIF(?, ""), password) WHERE user_id = ?';
-                    db.query(sqlUpdate, [hash, user_id], (err, result) => {
-                        if (err) {
-                            return res.status(500).json({ error: 'Hiba az SQL-ben' });
-                        }
-                        return res.status(200).json({ message: 'Jelszó frissítve' });
-                    });
-                });
-            } else {
-                return res.status(401).json({ error: 'Rossz a jelszó' });
-            }
-        });
-    });
-};*/
-
 //új képek uploads feltöltése
 app.post('/api/upload', authenticateToken, upload.single('kep'), (req, res) => {
     const felhasznalo_id = req.user.id;
@@ -432,6 +351,19 @@ app.post('/api/booking', authenticateToken, (req, res) => {
         console.log('SQL eredmény:', results);  // A sikeres SQL válasz naplózása
         return res.status(201).json({ message: 'Sikeres foglalás!' });
     });
+});
+app.get('/api/myBooking', authenticateToken, (req, res) =>{
+    const felhasznalo_id = req.user.id;
+
+    const sql = 'SELECT s.nev AS szolgaltatas_nev, s.ar, f.datum FROM foglalasok f JOIN szolgaltatasok s ON f.szolgaltatas_id = s.szolgaltatas_id WHERE f.felhasznalo_id = ? ORDER BY f.datum DESC';
+    pool.query(sql, (err, result) => {
+        if (err) {
+            console.log('Adatbázis hiba:', err);
+            return res.status(500).json({ error: 'Adatbázis hiba' });
+        }
+        res.json(result);
+    });
+    
 });
 //kategóriák lekérése a kirajzoláshoz services.html-ben
 app.get('/api/services', (req, res) => {
@@ -602,23 +534,6 @@ app.put('/api/changeservices/:szolgaltatas_id', (req, res) => {
         return res.status(201).json({ message: 'Sikeres módosítás' });
     })
 });
-/*app.post("/api/get-service-id", async (req, res) => {
-    const { service } = req.body; // Pl. "Esztétikai pedikűr"
-    if (!service) {
-        return res.status(400).json({ error: "Nincs kiválasztott szolgáltatás" });
-    }
-
-    const sql = `SELECT szolgaltatas_id FROM szolgaltatasok WHERE nev = ?`;
-
-    pool.query(sql, [service], (err, results) => {
-        if (err) return res.status(500).json({ error: "DB hiba" });
-        if (results.length === 0) return res.status(404).json({ error: "Nem található szolgáltatás" });
-        
-        res.json({ service_id: results[0].szolgaltatas_id });
-    });
-});
-*/
-
 //kapcsolat feltöltés
 app.post('/api/contact', authenticateToken, (req, res) => {
     const { nev, telefon, email, uzenet } = req.body;
@@ -637,7 +552,6 @@ app.post('/api/contact', authenticateToken, (req, res) => {
 });
 
 /*vélemények írása*/
-
 app.post('/api/velemeny', authenticateToken, (req, res) => {
     const felhasznalo_id = req.user.id; // A bejelentkezett felhasználó ID-ja
     const { velemeny } = req.body;
