@@ -9,6 +9,7 @@ const path = require('path');
 const validator = require('validator');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
+const { ifError } = require('assert');
 
 
 const app = express();
@@ -353,7 +354,6 @@ app.post('/api/booking', authenticateToken, (req, res) => {
     });
 });
 app.get('/api/myBooking', authenticateToken, (req, res) =>{
-    const felhasznalo_id = req.user.id;
 
     const sql = 'SELECT s.nev AS szolgaltatas_nev, s.ar, f.datum FROM foglalasok f JOIN szolgaltatasok s ON f.szolgaltatas_id = s.szolgaltatas_id WHERE f.felhasznalo_id = ? ORDER BY f.datum DESC';
     pool.query(sql, (err, result) => {
@@ -361,7 +361,10 @@ app.get('/api/myBooking', authenticateToken, (req, res) =>{
             console.log('Adatbázis hiba:', err);
             return res.status(500).json({ error: 'Adatbázis hiba' });
         }
-        res.json(result);
+        if (err) {
+            return res.status(500).json({error: 'Nincs lefoglalt időpont!'})
+        }
+        return res.status(201).json(result);
     });
     
 });
