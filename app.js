@@ -370,7 +370,7 @@ app.get('/api/myBooking', authenticateToken, (req, res) =>{
     
 });
 //időpont törlése
-app.delete('/api/deleteBooking', authenticateToken, (req, res)=>{
+app.delete('/api/deleteBooking/:foglalas_id', authenticateToken, (req, res)=>{
     const { foglalas_id } = req.params;
     const sql = ('DELETE FROM foglalasok WHERE `foglalasok`.`foglalas_id` = ?');
     pool.query(sql, [foglalas_id], (err, result) => {
