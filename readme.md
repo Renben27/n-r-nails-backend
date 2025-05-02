@@ -197,3 +197,4 @@ Postman tesztelési link-> ![ITT](https://img.shields.io/badge/ITT-purple
 -[Npm](https://www.npmjs.com)
 -[ChatGPT](https://www.chatgpt.com)
 -[Google](https://www.google.com)
+-[DrawSQL](https://drawsql.app)
