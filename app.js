@@ -353,6 +353,7 @@ app.post('/api/booking', authenticateToken, (req, res) => {
         return res.status(201).json({ message: 'Sikeres foglalás!' });
     });
 });
+//lefoglalt időpontok
 app.get('/api/myBooking', authenticateToken, (req, res) =>{
 
     const sql = 'SELECT s.nev AS szolgaltatas_nev, s.ar, f.datum FROM foglalasok f JOIN szolgaltatasok s ON f.szolgaltatas_id = s.szolgaltatas_id WHERE f.felhasznalo_id = ? ORDER BY f.datum DESC';
@@ -368,6 +369,19 @@ app.get('/api/myBooking', authenticateToken, (req, res) =>{
     });
     
 });
+//időpont törlése
+app.delete('/api/deleteBooking', authenticateToken, (req, res)=>{
+    const { foglalas_id } = req.params;
+    const sql = ('DELETE FROM foglalasok WHERE `foglalasok`.`foglalas_id` = ?');
+    pool.query(sql, [foglalas_id], (err, result) => {
+        if (err) {
+            console.log(err);
+            return res.status(500).json({ error: 'Hiba' });
+        }
+        return res.status(201).json({ message: 'Sikeres törlés' });
+    })
+});
+
 //kategóriák lekérése a kirajzoláshoz services.html-ben
 app.get('/api/services', (req, res) => {
     const query = `
