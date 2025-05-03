@@ -9,7 +9,6 @@ const path = require('path');
 const validator = require('validator');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
-const { ifError } = require('assert');
 
 
 const app = express();
@@ -372,7 +371,7 @@ app.get('/api/myBooking', authenticateToken, (req, res) =>{
 //időpont törlése
 app.delete('/api/deleteBooking/:foglalas_id', (req, res)=>{
     const { foglalas_id } = req.params;
-    const sql = ('DELETE FROM foglalasok WHERE `foglalasok`.`foglalas_id` = ?');
+    const sql = ('DELETE FROM foglalasok WHERE foglalasok.foglalas_id = ?');
     pool.query(sql, [foglalas_id], (err, result) => {
         if (err) {
             console.log(err);
@@ -380,24 +379,6 @@ app.delete('/api/deleteBooking/:foglalas_id', (req, res)=>{
         }
         return res.status(201).json({ message: 'Sikeres törlés' });
     })
-});
-
-//kategóriák lekérése a kirajzoláshoz services.html-ben
-app.get('/api/services', (req, res) => {
-    const query = `
-        SELECT k.kategoria_id, k.nev AS kategoria_nev, k.kep, s.szolgaltatas_id, s.nev AS szolgaltatas_nev, s.ar
-        FROM kategoriak k
-        LEFT JOIN szolgaltatasok s ON k.kategoria_id = s.kategoria_id
-        ORDER BY k.kategoria_id, s.szolgaltatas_id;
-    `;
-
-    pool.query(query, (err, result) => {
-        if (err) {
-            console.log('Adatbázis hiba:', err);
-            return res.status(500).json({ error: 'Adatbázis hiba' });
-        }
-        res.json(result.rows);
-    });
 });
 
 // A megadott kategoria_id alapján adja vissza a kategóriát és a hozzá tartozó szolgáltatásokat
