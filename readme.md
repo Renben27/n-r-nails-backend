@@ -124,7 +124,8 @@ npm run dev
 
  ---
 ## 🌐 Frontend Link
-A backendhez tartozó frontend itt érhető el: 🔗 [N&R Nails Frontend](https://nandrnails.netlify.app/)
+A backendhez tartozó weboldal itt érhető el: 🔗 [N&R Nails Frontend](https://nandrnails.netlify.app/)
+Itt megnézheted a frontend repositorit és dokumentációt: [Frontend repo](https://github.com/Renben27/n-r-nails-frontend.git)
 
  ---
 
@@ -191,8 +192,7 @@ Az alábbi táblázatban találhatók az API végpontok és azok leírása. Mind
 - A .env fájl tartalmaz minden érzékeny adatot – ne oszd meg publikusan!
 
 ## Postman tesztelés
-Postman tesztelési link-> ![ITT](https://img.shields.io/badge/ITT-purple
-)
+Postman tesztelési link-> ![ITT]([https://img.shields.io/badge/ITT-purple](https://documenter.getpostman.com/view/40006960/2sB2j3ABbN))
 ## Oldalon használt hivatkozások
 -[Npm](https://www.npmjs.com)
 -[ChatGPT](https://www.chatgpt.com)
