@@ -356,7 +356,7 @@ app.post('/api/booking', authenticateToken, (req, res) => {
 app.get('/api/myBooking', authenticateToken, (req, res) =>{
 
     const sql = 'SELECT s.nev AS szolgaltatas_nev, s.ar, f.datum FROM foglalasok f JOIN szolgaltatasok s ON f.szolgaltatas_id = s.szolgaltatas_id WHERE f.felhasznalo_id = ? ORDER BY f.datum DESC';
-    pool.query(sql, [req.user.id], (err, result) => {
+    pool.query(sql, (err, result) => {
         if (err) {
             console.log('Adatbázis hiba:', err);
             return res.status(500).json({ error: 'Adatbázis hiba' });
@@ -369,7 +369,7 @@ app.get('/api/myBooking', authenticateToken, (req, res) =>{
     
 });
 //időpont törlése
-app.delete('/api/deleteBooking/:foglalas_id', (req, res)=>{
+app.delete('/api/deleteBooking/:foglalas_id', authenticateToken, (req, res)=>{
     const { foglalas_id } = req.params;
     const sql = ('DELETE FROM foglalasok WHERE foglalasok.foglalas_id = ?');
     pool.query(sql, [foglalas_id], (err, result) => {
@@ -524,7 +524,7 @@ app.put('/api/changeservices/:szolgaltatas_id', (req, res) => {
     const { kategoria_id, nev, ar } = req.body;
     console.log(szolgaltatas_id, kategoria_id, nev, ar);
     const sql = 'UPDATE `szolgaltatasok` SET `nev` = ?, `ar` = ? WHERE `szolgaltatasok`.`szolgaltatas_id` = ?;';
-    pool.query(sql, [kategoria_id, nev, ar, szolgaltatas_id], function (err, result) {
+    pool.query(sql, [szolgaltatas_id, kategoria_id, nev, ar], function (err, result) {
         if (err) {
             console.log(err);
             return res.status(500).json({ error: 'Hiba' }, err);
@@ -550,7 +550,7 @@ app.post('/api/contact', authenticateToken, (req, res) => {
 });
 
 /*vélemények írása*/
-app.post('/api/velemeny', authenticateToken, (req, res) => {
+app.post('/api/opinion', authenticateToken, (req, res) => {
     const felhasznalo_id = req.user.id; // A bejelentkezett felhasználó ID-ja
     const { velemeny } = req.body;
 
