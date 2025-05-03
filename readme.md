@@ -137,7 +137,7 @@ Az alábbi táblázatban találhatók az API végpontok és azok leírása. Mind
 |---------|-----------------|------------------------------------------|------------------------------------|-------------|
 | **GET** | /api/getProfile      | Adatok betöltése                       | - | ✅ Igen     |
 | **POST**| /api/upload      | Új kép feltöltése                      | `kep ` (body)   | ✅ Igen     |
-| **GET** | /api/images  | Képek lekérése             |                 | ✅ Igen     |
+| **GET** | /api/images  | Képek lekérése             |     -            | ✅ Igen     |
 | **POST**| /api/addcategory      | Új kategória felvétele                      | `kep ` `nev ` (body)   | ✅ Igen     |
  | **DELETE** | /api/delcategory | Kategória törlése                           | `id` (URL paraméter) | ✅ Igen     |
  | **POST**| /api/addservices      | Új szolgáltatás felvétele                      |  `kategoria_id`, `nev`, `ar` (body)   | ✅ Igen     |
@@ -146,13 +146,17 @@ Az alábbi táblázatban találhatók az API végpontok és azok leírása. Mind
 | **PUT** | /api/profile  | Profil szerkesztése                         | `name`, `phone`, `email`  (body)  | ✅ Igen     |
 | **PUT** | /api/passwordChange  | Jelszó módosítása                         | `oldPassword`, `newPassword`  (body)  | ✅ Igen     |
  | **POST**| /api/contact      | Kapcsolat felvétele                      |  `nev`, `telefon`, `email`, `uzenet` (body)   | ✅ Igen     |
-| **POST**| /api/velemeny      | Vélemény írása                     |  `velemeny `  (body)   | ✅ Igen     |
- | **DELETE** | /api/books/:id | Könyv törlése                           | `id` (URL paraméter) | ✅ Igen     |
+| **POST**| /api/opinion      | Vélemény írása                     |  `velemeny `  (body)   | ✅ Igen     |
+| **GET**| /api/getopinions   | Vélemények lekérése    | - | ✅ Igen       |
 | **POST**| /api/login      | Bejelentkezés                            | `email`, `psw` (body) | ❌ Nem      |
 | **POST**| /api/logout     | Kijelentkezés                            | - | ✅ Igen |
  | **POST**| /api/register   | Regisztráció                             | `email`, `psw`, `felhasznev` (body) | ❌ Nem      |
-
- ---
+ | **GET**| /api/logintest   | Bejelentkezés letesztelése                       | - |  ✅ Igen    | 
+| **GET**| /api/categories-with-services   | Kategóriák és szolgáltatások lekérése    | - | ❌ Nem      |
+ | **GET**| /api/myBooking  |Bejelentkezett felhasználó lefoglalt időpontjai, szolgáltatásai   | - | ✅ Igen |
+| **POST**| /api/booking  | Időpontfoglalás                             | `datum`, `szolgaltatas_id` (body) | ✅ Igen |
+| **DELETE**| /api/deleteBooking   | Foglalás törlése| `id` (URL paraméter) | ✅ Igen   |
+| **GET**| /api/category   | Kategória lekérése    |  `id` (URL paraméter) | ❌ Nem      |
  ## 👩‍💼 Admin
  A bejelentkezésakor a végpont bcrypt segítségével megvizsgálja a szerepkört ami 0(user) illetve 1(admin)-ből áll, és így navigálja át az illetőt a megfelelő oldalra.
  ```bash
@@ -192,9 +196,9 @@ Az alábbi táblázatban találhatók az API végpontok és azok leírása. Mind
 - A .env fájl tartalmaz minden érzékeny adatot – ne oszd meg publikusan!
 
 ## Postman tesztelés
-Postman tesztelési link-> ![ITT]([https://img.shields.io/badge/ITT-purple](https://documenter.getpostman.com/view/40006960/2sB2j3ABbN))
+Postman tesztelési link-> [ITT]([https://img.shields.io/badge/ITT-purple](https://documenter.getpostman.com/view/40006960/2sB2j3ABbN))
 ## Oldalon használt hivatkozások
--[Npm](https://www.npmjs.com)
--[ChatGPT](https://www.chatgpt.com)
--[Google](https://www.google.com)
--[DrawSQL](https://drawsql.app)
+- [Npm](https://www.npmjs.com)
+- [ChatGPT](https://www.chatgpt.com)
+- [Google](https://www.google.com)
+- [DrawSQL](https://drawsql.app)
